@@ -1,10 +1,9 @@
-import type {TextStyle, ViewStyle} from 'react-native';
+import type { TextStyle, ViewStyle } from 'react-native';
 
 export interface IKyonMasterText {
   textStyle?: TextStyle;
   wrapperStyle?: ViewStyle;
-  text: string;
+  text?: string;
   variant?: string;
   debug?: boolean;
-  noStyle?: boolean;
 }

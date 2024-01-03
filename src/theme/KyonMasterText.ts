@@ -3,7 +3,7 @@ import type {IKyonMasterTextStyle} from '../interfaces';
 export const KyonMasterText: IKyonMasterTextStyle = {
   defaultProps: {
     text: {
-      color: 'white',
+      color: '#63C6F4',
     },
     wrapper: {
       padding: 15,

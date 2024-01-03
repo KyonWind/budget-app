@@ -5,45 +5,28 @@ export const KyonMasterInput: IKyonMasterInputStyle = {
     label: {
       defaultProps: {
         text: {
-          backgroundColor: 'transparent',
+          color: '#121313',
         },
         wrapper: {
-          padding: 0,
+          height: 25,
           display: 'flex',
-          justifyContent: 'flex-start',
-          width: '100%',
+          padding: 0,
         },
       },
     },
-    input: {},
+    input: {
+      borderWidth: 2,
+      borderColor: '#63C6F4',
+      color: '#121313',
+    },
+    basicInputConfigs: {
+      placeholderTextColor: '#c0c0c0',
+    },
     wrapper: {
-      padding: 15,
       display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
+      alignContent: 'space-around',
+      marginBottom: 10,
     },
   },
-  variants: {
-    sideLabel: {
-      label: {
-        defaultProps: {
-          wrapper: {
-            width: '50%',
-          },
-        },
-      },
-      input: {
-        width: '50%',
-      },
-      wrapper: {},
-    },
-    fitWidth: {
-      input: {},
-      wrapper: {
-        alignSelf: 'center',
-        width: '40%',
-        justifyContent: 'center',
-      },
-    },
-  },
+  variants: {},
 };

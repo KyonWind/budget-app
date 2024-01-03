@@ -8,7 +8,7 @@ export interface IKyonMasterTextStyle {
   variants?: {
     [key: string]: {
       text?: TextStyle;
-      wrapper: ViewStyle;
+      wrapper?: ViewStyle;
     };
   };
 }

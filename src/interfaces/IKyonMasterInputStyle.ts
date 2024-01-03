@@ -1,22 +1,27 @@
-import type {
-  StyleProp,
-  TextInputProps,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import type {ColorValue, TextInputProps, ViewStyle} from 'react-native';
 import type {IKyonMasterTextStyle} from './IKyonMasterTextStyle';
 
 export interface IKyonMasterInputStyle {
   defaultProps?: {
-    input?: StyleProp<TextStyle>;
+    input?: IkyonStyle;
     wrapper?: ViewStyle;
     label?: IKyonMasterTextStyle;
+    basicInputConfigs?: IBasicConfig;
   };
   variants?: {
     [key: string]: {
-      input?: StyleProp<TextStyle>;
-      wrapper: ViewStyle;
-      label?: IKyonMasterTextStyle;
+      input?: TextInputProps;
+      wrapper?: ViewStyle;
     };
   };
+}
+
+export interface IkyonStyle extends TextInputProps {
+  borderWidth: number;
+  borderColor: string;
+  color: string;
+}
+
+export interface IBasicConfig {
+  placeholderTextColor: ColorValue;
 }

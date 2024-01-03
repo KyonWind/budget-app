@@ -1,26 +1,33 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Linking, Text, TextInput, View} from 'react-native';
+import {Button, Linking, Text, View} from 'react-native';
 import {IAppLinks} from '../../App.tsx';
 import database from '@react-native-firebase/database';
+import {KyonMasterInput} from '../components';
 
 export const Home = () => {
   const [data, setData] = useState({
     name: '',
     type: '',
     description: '',
-    cost: 0,
+    cost: '',
+    url: '',
+    paymentMethod: '',
   });
   const [isPaid, setIsPaid] = useState(false);
 
-  const openApp = async (url: string) => {
+  console.log('Home:date', new Date().toLocaleDateString());
+
+  const openApp = async () => {
     database().ref('/gastos').push({
       name: data.name,
       type: data.type,
       description: data.description,
       cost: data.cost,
+      paymentMethod: data.paymentMethod,
+      date: new Date().toLocaleDateString(),
     });
-    if (url !== '') {
-      Linking.openURL(url).catch(err => console.log('App:e', err));
+    if (data.url !== '') {
+      Linking.openURL(data.url).catch(err => console.log('App:e', err));
     } else {
       setIsPaid(true);
     }
@@ -65,10 +72,13 @@ export const Home = () => {
     }
   }, [isPaid]);
 
+  console.log('Home:Home', data.cost);
+
   return (
     <View style={{padding: 15, width: '100%', height: '100%', display: 'flex'}}>
-      <Text>miembro</Text>
-      <TextInput
+      <KyonMasterInput
+        type={'select'}
+        label={'miembro'}
         placeholder={'Sofi, Simon'}
         onChangeText={value =>
           setData(prev => ({
@@ -77,19 +87,23 @@ export const Home = () => {
           }))
         }
       />
-      <Text>importe</Text>
-      <TextInput
+      <KyonMasterInput
+        type={'select'}
         placeholder={'importe'}
+        inputMode={'decimal'}
+        value={data.cost}
         onChangeText={value =>
           setData(prev => ({
             ...prev,
-            cost: +value,
+            cost: value,
           }))
         }
+        label={'importe'}
       />
-      <Text>Despcripcion</Text>
-      <TextInput
-        placeholder={'Descripcion'}
+      <KyonMasterInput
+        type={'select'}
+        label={'descripcion'}
+        placeholder={'descripcion'}
         onChangeText={value =>
           setData(prev => ({
             ...prev,
@@ -97,8 +111,9 @@ export const Home = () => {
           }))
         }
       />
-      <Text>Tipo</Text>
-      <TextInput
+      <KyonMasterInput
+        type={'select'}
+        label={'tipo'}
         placeholder={'Visa, Efectivo , etc'}
         onChangeText={value =>
           setData(prev => ({
@@ -107,14 +122,35 @@ export const Home = () => {
           }))
         }
       />
-      <Text>Metado de pago</Text>
-      {appsLinks.map((app, index) => {
-        return (
-          <View key={index} style={{marginTop: 20}}>
-            <Button title={app.name} onPress={() => openApp(app.url)} />
-          </View>
-        );
-      })}
+      <KyonMasterInput
+        type={'modal'}
+        label={'metodo de pago'}
+        placeholder={'metodo'}
+        value={data.paymentMethod}
+        options={appsLinks.map((app, index) => {
+          return (
+            <View key={index} style={{marginTop: 20}}>
+              <Button
+                title={app.name}
+                onPress={() =>
+                  setData(prev => ({
+                    ...prev,
+                    url: app.url,
+                    paymentMethod: app.name,
+                  }))
+                }
+              />
+            </View>
+          );
+        })}
+        onChangeText={value =>
+          setData(prev => ({
+            ...prev,
+            paymentMethod: value,
+          }))
+        }
+      />
+      <Button title={'PAGAR'} onPress={() => openApp()} />
       <Text>{isPaid ? 'PAGADO' : ''}</Text>
     </View>
   );
