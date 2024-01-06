@@ -3,12 +3,12 @@ import {
   Animated,
   Button,
   Easing,
-  Modal,
+  Modal, Pressable,
   ScrollView,
   TextInput,
   View,
-  ViewStyle,
-} from 'react-native';
+  ViewStyle
+} from "react-native";
 import React, {useEffect, useRef, useState} from 'react';
 import {useThemeContext} from '../context';
 import type {IKyonMasterInput} from '../interfaces';
@@ -34,12 +34,10 @@ export const KyonMasterInput = ({
   options,
 }: IKyonMasterInput) => {
   const {theme} = useThemeContext();
-  console.log('KyonMasterInput:KyonMasterInput');
   const LabelAnimated = useRef(new Animated.Value(25)).current;
   const LabelOpacityAnimated = useRef(new Animated.Value(0)).current;
   const [internalValue, setInternalValue] = useState(value);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  console.log('KyonMasterInput:KyonMasterInput', value);
   const onFocus = () => {
     // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(LabelAnimated, {
@@ -53,11 +51,12 @@ export const KyonMasterInput = ({
       duration: 100,
       useNativeDriver: true,
     }).start();
-
-    if (type === 'modal') {
-      setOpenModal(true);
-    }
   };
+
+  const onPressIn = () => {
+    console.log('KyonMasterInput:onPressIn');
+      setOpenModal(true);
+  }
 
   const onBlur = () => {
     if (!internalValue) {
@@ -168,10 +167,10 @@ export const KyonMasterInput = ({
   };
 
   useEffect(() => {
-    if (type === 'modal' && value !== '' && openModal) {
+    if (type === 'modal' && value) {
       setOpenModal(false);
     }
-  }, [internalValue, openModal, type, value]);
+  }, [internalValue, value]);
 
   return (
     <View>
@@ -184,14 +183,14 @@ export const KyonMasterInput = ({
             text={label}
           />
         )}
-        <TextInput
+        { type !== 'modal' ? <TextInput
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
           value={value}
           keyboardType={keyboardType}
           inputMode={inputMode}
-          onChangeText={value => {
-            onChangeText(value), setInternalValue(value);
+          onChangeText={val => {
+            onChangeText(val), setInternalValue(val);
           }}
           placeholderTextColor={
             //@ts-ignore
@@ -200,7 +199,22 @@ export const KyonMasterInput = ({
           selectionColor={selectionColor}
           placeholder={placeholder}
           style={INPUT_STYLE}
-        />
+        /> :
+         <Pressable style={VIEW_STYLE} onPressIn={onPressIn}>
+          <TextInput
+            value={value}
+            editable={false}
+            keyboardType={keyboardType}
+            inputMode={inputMode}
+            placeholderTextColor={
+              //@ts-ignore
+              themeBasicConfig.placeholderTextColor ?? placeholderTextColor
+            }
+            selectionColor={selectionColor}
+            placeholder={placeholder}
+            style={INPUT_STYLE}
+          />
+        </Pressable>}
       </Animated.View>
       <Modal
         animationType="slide"

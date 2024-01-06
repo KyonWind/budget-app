@@ -12,22 +12,5 @@ export const KyonMasterText: IKyonMasterTextStyle = {
       justifyContent: 'center',
     },
   },
-  variants: {
-    fullWidth: {
-      text: {
-        color: 'blue',
-      },
-      wrapper: {},
-    },
-    fitWidth: {
-      text: {
-        color: 'yellow',
-      },
-      wrapper: {
-        alignSelf: 'center',
-        width: '80%',
-        justifyContent: 'flex-start',
-      },
-    },
-  },
+  variants: {},
 };
