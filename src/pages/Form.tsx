@@ -12,9 +12,9 @@ export interface IData {
   paymentMethod: string;
 }
 
-export const Home = () => {
+export const Form = () => {
   const [data, setData] = useState<IData>(formInitialState);
-  console.log('Home:Home');
+  console.log('Form:Form');
 
   return (
     <View style={{padding: 15, width: '100%', height: '100%', display: 'flex'}}>

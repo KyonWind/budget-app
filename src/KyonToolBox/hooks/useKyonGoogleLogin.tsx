@@ -9,6 +9,7 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
 
   const { setItem, getItem } = useKyonAsyncStorageListener();
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  console.log('useKyonGoogleLogin:useKyonGoogleLogin',isLogged);
 
 
    const onGoogleButtonPress = useCallback(async () => {
@@ -17,25 +18,34 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
          webClientId,
          scopes: ['profile','email']
        });
-       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-       // Get the users ID token
-       const { idToken } = await GoogleSignin.signIn();
-      console.log('useKyonGoogleLogin:idToken',idToken);
-       await setItem('token', idToken);
 
-       // Create a Google credential with the  token
-       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+       const token = await getItem('token');
+       console.log('useKyonGoogleLogin:token',token);
 
-       // Sign-in the user with the credential
-       const googledata = await auth().signInWithCredential(googleCredential);
-       console.log('useKyonGoogleLogin:',googledata);
-       const profileData = {
-         name: googledata.additionalUserInfo?.profile?.given_name,
-         email: googledata.user.email
-       };
-       console.log('useKyonGoogleLogin:profileData',profileData);
-       await setItem('profile',JSON.stringify(profileData))
-       setIsLogged(true);
+       if (token) {
+         const googleCredential = auth.GoogleAuthProvider.credential(token);
+         const googledata = await auth().signInWithCredential(googleCredential);
+         const profileData = {
+           name: googledata.additionalUserInfo?.profile?.given_name,
+           email: googledata.user.email
+         };
+         await setItem('profile',JSON.stringify(profileData))
+         setIsLogged(true);
+       } else {
+         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+         const { idToken } = await GoogleSignin.signIn();
+         await setItem('token', idToken);
+         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+         const googledata = await auth().signInWithCredential(googleCredential);
+         const profileData = {
+           name: googledata.additionalUserInfo?.profile?.given_name,
+           email: googledata.user.email
+         };
+         await setItem('profile',JSON.stringify(profileData))
+         setIsLogged(true);
+       }
+
+
      } catch (e) {
        //@ts-ignore
        console.log('useKyonGoogleLogin:ERROR',e);
@@ -45,13 +55,14 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
   },[])
 
   const onInit = useCallback(async () =>{
-    if(await getItem("token")) {
+    const token = await getItem("token");
+    console.log('onInit:token',token);
+    if(token) {
       setIsLogged(true);
     }
-  },[])
+  },[isLogged, setIsLogged])
 
   useEffect(() => {
-    console.log('useKyonGoogleLogin:');
     onInit()
   }, [isLogged]);
 
