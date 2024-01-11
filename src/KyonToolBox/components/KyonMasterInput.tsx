@@ -10,10 +10,10 @@ import {
   ViewStyle
 } from "react-native";
 import React, {useEffect, useRef, useState} from 'react';
-import {useThemeContext} from '../context';
-import type {IKyonMasterInput} from '../interfaces';
-import {KyonMasterText} from './KyonMasterText';
-import type {IKyonMasterText} from '../interfaces';
+import {useThemeContext} from '../../context';
+import type {IKyonMasterInput} from '../../interfaces';
+import {KyonMasterText} from './KyonMasterText.tsx';
+import type {IKyonMasterText} from '../../interfaces';
 
 export const KyonMasterInput = ({
   debug = false,

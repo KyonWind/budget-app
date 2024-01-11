@@ -1,7 +1,7 @@
 import {Animated, Text, ViewStyle} from 'react-native';
 import React from 'react';
-import {useThemeContext} from '../context';
-import type {IKyonMasterText} from '../interfaces';
+import {useThemeContext} from '../../context';
+import type {IKyonMasterText} from '../../interfaces';
 
 export const KyonMasterText = ({
   textStyle,

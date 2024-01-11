@@ -1,4 +1,4 @@
-import { KyonMasterInput, KyonMasterText } from "../KyonToolBox";
+import { KyonMasterInput, KyonMasterText } from "../KyonToolBox/components";
 import {Button, Linking, Text, View} from 'react-native';
 import React, {
   Dispatch,

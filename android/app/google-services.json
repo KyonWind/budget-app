@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "907797952601",
+    "firebase_url": "https://budget-kyonwind-default-rtdb.firebaseio.com",
+    "project_id": "budget-kyonwind",
+    "storage_bucket": "budget-kyonwind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907797952601:android:9122c7807a1e8a50f11948",
+        "android_client_info": {
+          "package_name": "com.budgetapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907797952601-238vnj8iqgejtlv0c3c68jg93veuhtia.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.budgetapp",
+            "certificate_hash": "aa96e8a9934ece4a815a0c61183758082b2ec8e5"
+          }
+        },
+        {
+          "client_id": "907797952601-k7uod4pcesda7dt7metuup7q6cb194s7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe2KsP0suY-IvFd8sqrlSm4ST2Cln90Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907797952601-k7uod4pcesda7dt7metuup7q6cb194s7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
