@@ -4,7 +4,6 @@ import {FormPago} from '../components/FormPago.tsx';
 import {formInitialState} from '../const';
 
 export interface IData {
-  name: string;
   type: string;
   description: string;
   cost: string;
@@ -14,7 +13,6 @@ export interface IData {
 
 export const Home = () => {
   const [data, setData] = useState<IData>(formInitialState);
-  console.log('Home:Home');
 
   return (
     <View style={{padding: 15, width: '100%', height: '100%', display: 'flex'}}>

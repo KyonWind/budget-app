@@ -17,6 +17,7 @@ export const KyonRouter = () => {
 
 
   const selectProfile = () => {
+
     if(isLogged) {
       setActiveProfile('private');
     } else {
@@ -41,7 +42,7 @@ export const KyonRouter = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName={initialRoute}>
+        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{headerShown: false}}>
           {routes ? routes: <Stack.Screen  name={'loading'} component={Loading}/>}
         </Stack.Navigator>
     </NavigationContainer>

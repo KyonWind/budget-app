@@ -9,8 +9,6 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
 
   const { setItem, getItem } = useKyonAsyncStorageListener();
   const [isLogged, setIsLogged] = useState<boolean>(false);
-  console.log('useKyonGoogleLogin:useKyonGoogleLogin',isLogged);
-
 
    const onGoogleButtonPress = useCallback(async () => {
      try {
@@ -20,8 +18,6 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
        });
 
        const token = await getItem('token');
-       console.log('useKyonGoogleLogin:token',token);
-
        if (token) {
          const googleCredential = auth.GoogleAuthProvider.credential(token);
          const googledata = await auth().signInWithCredential(googleCredential);
@@ -56,7 +52,6 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
 
   const onInit = useCallback(async () =>{
     const token = await getItem("token");
-    console.log('onInit:token',token);
     if(token) {
       setIsLogged(true);
     }

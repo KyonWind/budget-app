@@ -8,8 +8,6 @@ export const PublicRoutes = (): IKyonRoutes => {
     profileName: 'public',
     routes:[
       { name: 'login',component: Login},
-      { name: 'login2',component: Login},
-      { name: 'login3',component: Login}
     ],
     initialScreen: 'login',
   }

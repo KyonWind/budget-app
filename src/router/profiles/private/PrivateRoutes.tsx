@@ -7,7 +7,6 @@ export const PrivateRoutes = ():IKyonRoutes => ({
     profileName: 'private',
     routes:[
       {name: 'home', component: Home},
-      {name: 'form', component: Form},
     ],
-    initialScreen: 'form',
+    initialScreen: 'Home',
 })

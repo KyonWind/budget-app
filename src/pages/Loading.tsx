@@ -4,8 +4,6 @@ import { KyonMasterText } from "../KyonToolBox/components";
 
 export const Loading = () => {
 
-  console.log('Loading:Loading');
-
   return (
     <View style={{backgroundColor:'white'}}>
       <KyonMasterText text={'LOADING'}/>

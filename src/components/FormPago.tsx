@@ -11,6 +11,7 @@ import {IAppLinks} from '../../App.tsx';
 import {IData} from '../pages/Home.tsx';
 import database from '@react-native-firebase/database';
 import {formInitialState} from '../const';
+import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
@@ -50,8 +51,9 @@ const appsLinks: IAppLinks[] = [
 
 export const FormPago = ({setData, data}: IFormPago) => {
   const [isPaid, setIsPaid] = useState(false);
-
+  const [paymentTypes, setPaymentTypes] = useState([]);
   const [isDisabled, setIsDisable] = useState<boolean>(true);
+  const {getItem} = useKyonAsyncStorageListener();
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
@@ -72,13 +74,18 @@ export const FormPago = ({setData, data}: IFormPago) => {
     if (isPaid) {
       setTimeout(() => {
         setIsPaid(false);
+        setData(formInitialState);
       }, 1000);
     }
   }, [isPaid]);
 
-  const openApp = async () => {
+  const savePayment = useCallback( async () => {
+    let profile = await getItem('profile');
+    console.log('FormPago:data',Object.values(data));
+    //@ts-ignore
+    profile = JSON.parse(profile);
     database().ref('/gastos').push({
-      name: data.name,
+      name: profile?.name,
       type: data.type,
       description: data.description,
       cost: data.cost,
@@ -90,24 +97,25 @@ export const FormPago = ({setData, data}: IFormPago) => {
     } else {
       setIsPaid(true);
     }
-    setData(formInitialState);
     setIsPaid(true);
-  };
+  },[data]);
+
+  const getPaymentTypes = useCallback( async () => {
+    let profile = await getItem('profile');
+    //@ts-ignore
+    profile = JSON.parse(profile);
+    try {
+      await database().ref(`/user/${profile?.email}`).once((value)=> {
+        console.log('FormPago:',value.val());
+      })
+    } catch (e) {
+      console.log('getPaymentTypes:',e);
+    }
+
+  },[])
 
   return (
     <View>
-      <KyonMasterInput
-        type={'select'}
-        label={'miembro'}
-        value={data.name}
-        placeholder={'Sofi, Simon'}
-        onChangeText={value =>
-          setData((prev: IData) => ({
-            ...prev,
-            name: value,
-          }))
-        }
-      />
       <KyonMasterInput
         type={'select'}
         placeholder={'importe'}
@@ -173,8 +181,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
           }))
         }
       />
-      <Button disabled={isDisabled} title={'PAGAR'} onPress={() => openApp()} />
-
+      <Button disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
       <KyonMasterText textStyle={{color: '#d71c1c',fontSize: 40}} text={isPaid ? 'PAGADO' : ''} />
     </View>
   );
