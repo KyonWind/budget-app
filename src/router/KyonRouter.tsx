@@ -15,9 +15,6 @@ export const KyonRouter = () => {
   const [routes, setRoutes] = useState<any>()
   const [initialRoute, setinitialRoute] = useState<any>('loading')
 
-  console.log('KyonRouter:isLogged',isLogged);
-
-
   const selectProfile = useCallback( () => {
     console.log('KyonRouter:selectProfile');
     if(isLogged) {
@@ -28,6 +25,7 @@ export const KyonRouter = () => {
   },[isLogged])
 
   useEffect(() => {
+    console.log('KyonRouter:isLogged',isLogged);
     selectProfile()
   }, [isLogged]);
 

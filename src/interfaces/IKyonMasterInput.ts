@@ -23,4 +23,6 @@ export interface IKyonMasterInput extends TextInputProps {
   placeholderTextColor?: string;
   selectionColor?: string;
   options?: any[];
+  footerOptions?: any[];
+  headerOptions?: any[];
 }

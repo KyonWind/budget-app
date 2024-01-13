@@ -32,6 +32,8 @@ export const KyonMasterInput = ({
   inputMode,
   type,
   options,
+  footerOptions,
+  headerOptions,
 }: IKyonMasterInput) => {
   const {theme} = useThemeContext();
   const LabelAnimated = useRef(new Animated.Value(25)).current;
@@ -231,6 +233,7 @@ export const KyonMasterInput = ({
             </View>
             <ScrollView>{options}</ScrollView>
             <View style={MODAL_STYLE.footer}>
+              {footerOptions}
               <Button
                 onPress={() => setOpenModal(!openModal)}
                 color={'red'}

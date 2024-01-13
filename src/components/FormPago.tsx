@@ -1,5 +1,5 @@
 import { KyonMasterInput, KyonMasterText } from "../KyonToolBox/components";
-import {Button, Linking, Text, View} from 'react-native';
+import { Alert, Button, Linking, Modal, ScrollView, Text, View } from "react-native";
 import React, {
   Dispatch,
   SetStateAction,
@@ -52,8 +52,11 @@ const appsLinks: IAppLinks[] = [
 export const FormPago = ({setData, data}: IFormPago) => {
   const [isPaid, setIsPaid] = useState(false);
   const [paymentTypes, setPaymentTypes] = useState([]);
+  const [newPayment, setNewPayment] = useState('');
+  const [openPaymentModal, setOpenPaymentModal] = useState(false)
   const [isDisabled, setIsDisable] = useState<boolean>(true);
   const {getItem} = useKyonAsyncStorageListener();
+
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
@@ -105,14 +108,39 @@ export const FormPago = ({setData, data}: IFormPago) => {
     //@ts-ignore
     profile = JSON.parse(profile);
     try {
-      await database().ref(`/user/${profile?.email}`).once((value)=> {
-        console.log('FormPago:',value.val());
-      })
+      await database().ref(`/users/${profile?.user}/paymentMethods`).once('value')
+        .then(snapshot => {
+          console.log('User data: ',Array.from(Object.values(snapshot.val())));
+          setPaymentTypes(Array.from(Object.values(snapshot.val())))
+        });
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }
 
   },[])
+
+  useEffect(() => {
+    getPaymentTypes();
+  }, []);
+
+  const addPaymentTypes = useCallback( async () => {
+    let profile = await getItem('profile');
+    //@ts-ignore
+    profile = JSON.parse(profile);
+    console.log('FormPago:addPaymentTypes',`/user/${profile?.user}`);
+    try {
+       database()
+        .ref(`users/${profile?.user}/paymentMethods`)
+        .push({
+          name: newPayment,
+        });
+      setNewPayment('');
+      setOpenPaymentModal(false);
+    } catch (e) {
+      console.log('getPaymentTypes:',e);
+    }
+
+  },[newPayment])
 
   return (
     <View>
@@ -142,7 +170,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         }
       />
       <KyonMasterInput
-        type={'select'}
+        type={'modal'}
         label={'tipo'}
         value={data.type}
         placeholder={'Visa, Efectivo , etc'}
@@ -151,7 +179,19 @@ export const FormPago = ({setData, data}: IFormPago) => {
             ...prev,
             type: value,
           }))
+
         }
+        options={paymentTypes.map((type: {name: string}, index) => {
+          console.log('FormPago:',type, type.name);
+          return <Button key={index} title={type.name} onPress={()=> setData((prev: IData) => ({
+            ...prev,
+            type: type.name,
+          }))} />;
+        })}
+        footerOptions={[
+          <Button key={1234} title={'Agregar'} onPress={()=>
+            setOpenPaymentModal(true)}/>
+        ]}
       />
       <KyonMasterInput
         type={'modal'}
@@ -183,6 +223,48 @@ export const FormPago = ({setData, data}: IFormPago) => {
       />
       <Button disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
       <KyonMasterText textStyle={{color: '#d71c1c',fontSize: 40}} text={isPaid ? 'PAGADO' : ''} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openPaymentModal}
+        onRequestClose={() => {
+          setOpenPaymentModal(!openPaymentModal);
+        }}>
+        <View >
+          <View style={{
+            backgroundColor:'white',
+            margin:'5%',
+            padding: '5%',
+            borderRadius: 15
+          }} >
+            <View>
+              <KyonMasterText textStyle={{fontSize: 25}} text={'Agregar nuevo metodo de pago'} />
+            </View>
+            <ScrollView>
+              <KyonMasterInput
+              type={'select'}
+              label={'descripcion'}
+              value={newPayment}
+              placeholder={'descripcion'}
+              onChangeText={value =>
+                setNewPayment(value)
+              }
+            />
+            </ScrollView>
+            <View>
+              <Button
+                onPress={() => setOpenPaymentModal(!openPaymentModal)}
+                color={'red'}
+                title={'Cerrar'}
+              />
+              <Button
+                onPress={() => addPaymentTypes()}
+                title={'Agregar'}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

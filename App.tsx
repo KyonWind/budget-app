@@ -14,6 +14,7 @@ function App(): React.JSX.Element {
 
   const { clear} = useKyonAsyncStorageListener();
 
+  //
   //clear('token');
 
   const backgroundStyle = {

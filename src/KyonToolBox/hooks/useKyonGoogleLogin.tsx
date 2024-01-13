@@ -16,39 +16,36 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
          webClientId,
          scopes: ['profile','email']
        });
-      console.log('useKyonGoogleLogin:configured');
        const token = await getItem('token');
        if (token) {
          console.log('useKyonGoogleLogin:tokenFlow');
          const googleCredential = auth.GoogleAuthProvider.credential(token);
-         console.log('useKyonGoogleLogin:gotCredentials');
          const googledata = await auth().signInWithCredential(googleCredential);
-         console.log('useKyonGoogleLogin:gotData');
+         console.log('useKyonGoogleLogin:googledata',googledata?.user.email.replace('.',''));
          const profileData = {
            name: googledata.additionalUserInfo?.profile?.given_name,
-           email: googledata.user.email
+           email: googledata.user.email,
+           //@ts-ignore
+           user: googledata?.user.email.replace('.','')
          };
          await setItem('profile',JSON.stringify(profileData))
-         console.log('useKyonGoogleLogin:dataSaved');
          setIsLogged(true);
-         console.log('useKyonGoogleLogin:logged');
        } else {
          console.log('useKyonGoogleLogin:noTokenFlow');
          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
          const { idToken } = await GoogleSignin.signIn();
-         console.log('useKyonGoogleLogin:gotToken');
          await setItem('token', idToken);
          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-         console.log('useKyonGoogleLogin:gotCredentials');
          const googledata = await auth().signInWithCredential(googleCredential);
-         console.log('useKyonGoogleLogin:gotData');
+         console.log('useKyonGoogleLogin:googledata',googledata?.user.email.replace('.',''));
          const profileData = {
            name: googledata.additionalUserInfo?.profile?.given_name,
-           email: googledata.user.email
+           email: googledata.user.email,
+           //@ts-ignore
+           user: googledata?.user.email.replace('.','')
          };
          await setItem('profile',JSON.stringify(profileData))
          setIsLogged(true);
-         console.log('useKyonGoogleLogin:logged');
        }
 
 
