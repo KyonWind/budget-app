@@ -3,11 +3,15 @@ import React, { FC, ReactNode, createContext, useContext, useMemo, useState, Dis
 export interface KyonRouterContextValue {
   activeProfile: string|undefined;
   setActiveProfile: Dispatch<SetStateAction<string>>;
+  isLogged : boolean,
+  setIsLogged: Dispatch<SetStateAction<boolean>>;
 }
 
 export const KyonRouterContext = createContext<KyonRouterContextValue>({
   activeProfile: '',
-  setActiveProfile: () => ''
+  setActiveProfile: () => '',
+  isLogged : false,
+  setIsLogged: () => ''
 });
 
 export interface KyonRouterContextProvider {
@@ -17,12 +21,15 @@ export interface KyonRouterContextProvider {
 export const KyonRouterContextProvider: FC<KyonRouterContextProvider> = ({ children }) => {
 
   const [activeProfile, setActiveProfile] = useState<string>('')
+  const [isLogged, setIsLogged] = useState<boolean>(false);
 
 const value = useMemo(
   () => ({
   activeProfile,
   setActiveProfile,
-}), [activeProfile,setActiveProfile]);
+  isLogged,
+  setIsLogged
+}), [activeProfile,setActiveProfile,isLogged,setIsLogged]);
 return (
   <KyonRouterContext.Provider value={value}>
     {children}
