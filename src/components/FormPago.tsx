@@ -12,6 +12,8 @@ import {IData} from '../pages/Home.tsx';
 import database from '@react-native-firebase/database';
 import {formInitialState} from '../const';
 import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
+import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
+import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
@@ -84,7 +86,6 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
   const savePayment = useCallback( async () => {
     let profile = await getItem('profile');
-    console.log('FormPago:data',Object.values(data));
     //@ts-ignore
     profile = JSON.parse(profile);
     database().ref('/gastos').push({
@@ -136,6 +137,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         });
       setNewPayment('');
       setOpenPaymentModal(false);
+      await getPaymentTypes()
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }
@@ -182,14 +184,13 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
         }
         options={paymentTypes.map((type: {name: string}, index) => {
-          console.log('FormPago:',type, type.name);
-          return <Button key={index} title={type.name} onPress={()=> setData((prev: IData) => ({
+          return <KyonMasterButton key={index} title={type.name} onPress={()=> setData((prev: IData) => ({
             ...prev,
             type: type.name,
           }))} />;
         })}
         footerOptions={[
-          <Button key={1234} title={'Agregar'} onPress={()=>
+          <KyonMasterButton key={1234} title={'Agregar'} onPress={()=>
             setOpenPaymentModal(true)}/>
         ]}
       />
@@ -201,7 +202,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         options={appsLinks.map((app, index) => {
           return (
             <View key={index} style={{marginTop: 20}}>
-              <Button
+              <KyonMasterButton
                 title={app.name}
                 onPress={() =>
                   setData((prev: IData) => ({
@@ -221,50 +222,20 @@ export const FormPago = ({setData, data}: IFormPago) => {
           }))
         }
       />
-      <Button disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
+      <KyonMasterButton disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
       <KyonMasterText textStyle={{color: '#d71c1c',fontSize: 40}} text={isPaid ? 'PAGADO' : ''} />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openPaymentModal}
-        onRequestClose={() => {
-          setOpenPaymentModal(!openPaymentModal);
-        }}>
-        <View >
-          <View style={{
-            backgroundColor:'white',
-            margin:'5%',
-            padding: '5%',
-            borderRadius: 15
-          }} >
-            <View>
-              <KyonMasterText textStyle={{fontSize: 25}} text={'Agregar nuevo metodo de pago'} />
-            </View>
-            <ScrollView>
-              <KyonMasterInput
-              type={'select'}
-              label={'descripcion'}
-              value={newPayment}
-              placeholder={'descripcion'}
-              onChangeText={value =>
-                setNewPayment(value)
-              }
-            />
-            </ScrollView>
-            <View>
-              <Button
-                onPress={() => setOpenPaymentModal(!openPaymentModal)}
-                color={'red'}
-                title={'Cerrar'}
-              />
-              <Button
-                onPress={() => addPaymentTypes()}
-                title={'Agregar'}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <KyonMasterModal headerTitle={'Agregar nuevo metodo de pago'} footerOptions={[<KyonMasterButton
+        onPress={() => addPaymentTypes()}
+        title={'Agregar'}
+      />]} open={openPaymentModal} close={() => setOpenPaymentModal(!openPaymentModal)} options={[<KyonMasterInput
+        type={'select'}
+        label={'descripcion'}
+        value={newPayment}
+        placeholder={'descripcion'}
+        onChangeText={value =>
+          setNewPayment(value)
+        }
+      />]}/>
     </View>
   );
 };

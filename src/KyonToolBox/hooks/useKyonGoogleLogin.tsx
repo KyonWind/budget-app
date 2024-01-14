@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth';
 import { useCallback, useEffect, useState } from "react";
 import { useKyonAsyncStorageListener } from "./useKyonAsyncStorageListener.tsx";
 import { useKyonRouterContext } from "../../context/KyonRouterContext.tsx";
+import { KyonMasterText } from "../components";
 
 
 
@@ -18,7 +19,6 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
        });
        const token = await getItem('token');
        if (token) {
-         console.log('useKyonGoogleLogin:tokenFlow');
          const googleCredential = auth.GoogleAuthProvider.credential(token);
          const googledata = await auth().signInWithCredential(googleCredential);
          console.log('useKyonGoogleLogin:googledata',googledata?.user.email.replace('.',''));
@@ -72,8 +72,12 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
     const GoogleSignInButton =  useCallback(() => {
       return (
         <GoogleSigninButton
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Light}
           onPress={() => onGoogleButtonPress()}
+          style={{width: '100%'}}
         />
+
       )
 
   },[isLogged]);

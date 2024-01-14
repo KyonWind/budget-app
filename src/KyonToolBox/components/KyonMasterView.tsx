@@ -2,51 +2,41 @@ import {Animated, Text, ViewStyle} from 'react-native';
 import React from 'react';
 import {useThemeContext} from '../../context';
 import type {IKyonMasterText} from '../../interfaces';
+import { IKyonMasterView } from "../../interfaces/IKyonMasterView.ts";
 
-export const KyonMasterText = ({
-  textStyle,
+export const KyonMasterView = ({
   wrapperStyle,
-  text,
   variant,
   debug = false,
-}: IKyonMasterText) => {
-  const {theme} = useThemeContext();
+  children
+}: IKyonMasterView) => {
 
-  const variantText = variant
-    ? // @ts-ignore
-      theme?.KyonMasterText?.variants[variant]?.text
-    : {};
+  const {theme} = useThemeContext();
 
   const variantWrapper = variant
     ? // @ts-ignore
-      theme?.KyonMasterText?.variants[variant]?.wrapper
+      theme?.KyonMasterView?.variants[variant]?.view
     : {};
 
-  const themeText = theme?.KyonMasterText?.defaultProps?.text ?? {};
 
-  const themeWrapper = theme?.KyonMasterText?.defaultProps?.wrapper ?? {};
+  const themeView = theme?.KyonMasterView?.defaultProps?.view ?? {};
 
   const debugStyle: ViewStyle = debug
     ? {borderColor: 'red', borderWidth: 1}
     : {};
 
-  const TEXT_STYLE = {
-    ...themeText,
-    ...textStyle,
-    ...variantText,
-  };
-
   const VIEW_STYLE: ViewStyle = {
     display: 'flex',
     alignSelf: 'center',
     ...debugStyle,
-    ...themeWrapper,
+    ...themeView,
     ...wrapperStyle,
     ...variantWrapper,
   };
+
   return (
     <Animated.View style={VIEW_STYLE}>
-      <Text style={TEXT_STYLE}>{text}</Text>
+      {children}
     </Animated.View>
   );
 };

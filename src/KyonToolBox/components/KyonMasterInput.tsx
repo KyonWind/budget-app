@@ -11,9 +11,11 @@ import {
 } from "react-native";
 import React, {useEffect, useRef, useState} from 'react';
 import {useThemeContext} from '../../context';
-import type {IKyonMasterInput} from '../../interfaces';
+import type { IKyonMasterInput, IKyonMasterTextStyle } from "../../interfaces";
 import {KyonMasterText} from './KyonMasterText.tsx';
 import type {IKyonMasterText} from '../../interfaces';
+import { KyonMasterView } from "./KyonMasterView.tsx";
+import { KyonMasterModal } from "./KyonMasterModal.tsx";
 
 export const KyonMasterInput = ({
   debug = false,
@@ -56,7 +58,6 @@ export const KyonMasterInput = ({
   };
 
   const onPressIn = () => {
-    console.log('KyonMasterInput:onPressIn');
       setOpenModal(true);
   }
 
@@ -218,31 +219,7 @@ export const KyonMasterInput = ({
           />
         </Pressable>}
       </Animated.View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openModal}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setOpenModal(!openModal);
-        }}>
-        <View style={MODAL_STYLE.position}>
-          <View style={MODAL_STYLE.body}>
-            <View style={MODAL_STYLE.header}>
-              <KyonMasterText textStyle={{fontSize: 25}} text={label} />
-            </View>
-            <ScrollView>{options}</ScrollView>
-            <View style={MODAL_STYLE.footer}>
-              {footerOptions}
-              <Button
-                onPress={() => setOpenModal(!openModal)}
-                color={'red'}
-                title={'Cerrar'}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+    <KyonMasterModal options={options} open={openModal} close={()=> setOpenModal(!openModal)} footerOptions={footerOptions} headerTitle={label}/>
     </View>
   );
 };

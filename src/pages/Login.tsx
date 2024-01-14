@@ -1,5 +1,6 @@
 import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
 import { View } from "react-native";
+import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
 
 export const Login = () => {
 
@@ -8,9 +9,9 @@ export const Login = () => {
   );
 
   return (
-    <View>
+    <KyonMasterView variant={'background'}>
       <GoogleSignInButton/>
-    </View>
+    </KyonMasterView>
   )
 
 }

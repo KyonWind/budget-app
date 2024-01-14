@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { profiles } from "./profiles/profiles.ts";
 import { Loading } from "../pages/Loading.tsx";
 import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
+import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
 
 export const KyonRouter = () => {
 
@@ -16,7 +17,6 @@ export const KyonRouter = () => {
   const [initialRoute, setinitialRoute] = useState<any>('loading')
 
   const selectProfile = useCallback( () => {
-    console.log('KyonRouter:selectProfile');
     if(isLogged) {
       setActiveProfile('private');
     } else {
@@ -25,7 +25,6 @@ export const KyonRouter = () => {
   },[isLogged])
 
   useEffect(() => {
-    console.log('KyonRouter:isLogged',isLogged);
     selectProfile()
   }, [isLogged]);
 
@@ -42,9 +41,9 @@ export const KyonRouter = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{headerShown: false}}>
           {routes ? routes: <Stack.Screen  name={'loading'} component={Loading}/>}
-        </Stack.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   )
 }
