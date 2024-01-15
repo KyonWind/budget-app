@@ -61,7 +61,6 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
 
   const validate = useCallback(() => {
-    console.log('FormPago:item',data.description.trim() === '', !data.description);
     for (let item of Object.values(data)) {
       if (!item || item.trim() === '') {
         setIsDisable(true);

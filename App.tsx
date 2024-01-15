@@ -1,5 +1,4 @@
 import React from "react";
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {KyonThemeContextProvider} from './src/context';
 import {KyonMasterTheme} from './src/theme/KyonMasterTheme.tsx';
 import { KyonRouterContextProvider } from "./src/context/KyonRouterContext.tsx";

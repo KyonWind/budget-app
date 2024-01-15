@@ -1,29 +1,29 @@
 import database from "@react-native-firebase/database";
 import { useKyonAsyncStorageListener } from "../../../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { set } from "@react-native-firebase/database/lib/modular/query";
 import { useKyonRouterContext } from "../../KyonRouterContext.tsx";
+import { useBudgetFirebase } from "../BudgetFireBaseContext.tsx";
 
 
 interface IProfile {
   user: string
 }
-export const useSetAccountFirebase = () => {
+export const useSetAccountFirebase = (setDebugComment: Dispatch<SetStateAction<string|undefined>>) => {
 
   const { getItem } = useKyonAsyncStorageListener();
   const { setIsLogged} = useKyonRouterContext();
 
   const existOnFirebase = async () => {
     let profile : { user: string } | null = JSON.parse(await getItem('profile') as string);
-    console.log('useSetAccountFirebase:existOnFirebase',profile);
     if (profile) {
     let fireBaseAcc = await database().ref(`/users/${profile.user}`).once('value');
-
-      console.log('useSetAccountFirebase:fireBaseAcc', fireBaseAcc);
+      setDebugComment(prev => `${prev} \n\n ${JSON.stringify(fireBaseAcc)}`)
       if(!fireBaseAcc.exists()) {
         await createDataOnDatabase(profile);
         setIsLogged(true);
       } else {
+        setDebugComment(prev => `${prev} \n\n exist in Account`)
        setIsLogged(true);
       }
     }
@@ -31,12 +31,15 @@ export const useSetAccountFirebase = () => {
 
   const createDataOnDatabase = async (profile: IProfile) => {
     console.log('createDataOnDatabase:... creating');
-    await database().ref(`/users/${profile?.user}`).set({
+    setDebugComment(prev => `${prev} \n\n 'createDataOnDatabase:... creating'`)
+    const result = await database().ref(`/users/${profile?.user}`).set({
       name: profile?.user
     });
-    database().ref(`/users/${profile?.user}/paymentMethods`).push({
+    setDebugComment(prev => `${prev} \n\n result:${JSON.stringify(result)}`)
+    const addPayment = database().ref(`/users/${profile?.user}/paymentMethods`).push({
       name: 'Efectivo'
     });
+    setDebugComment(prev => `${prev} \n\n addPayment:${JSON.stringify(addPayment)}`)
     setIsLogged(true);
   }
 

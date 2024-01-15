@@ -3,11 +3,13 @@ import auth from '@react-native-firebase/auth';
 import { useCallback, useEffect, useState } from "react";
 import { useKyonAsyncStorageListener } from "./useKyonAsyncStorageListener.tsx";
 import { useKyonRouterContext } from "../../context/KyonRouterContext.tsx";
+import { useBudgetFirebase } from "../../context/BudgetFireBaseContext";
 
 export const useKyonGoogleLogin = ( webClientId?: string) => {
 
   const { setItem, getItem } = useKyonAsyncStorageListener();
   const { isLogged, setIsLogged } = useKyonRouterContext();
+  const {setDebugComment} = useBudgetFirebase();
    const onGoogleButtonPress = useCallback(async () => {
      try {
        GoogleSignin.configure({
@@ -17,12 +19,14 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
        const token = await getItem('token');
        if (token) {
          const googleCredential = auth.GoogleAuthProvider.credential(token);
+         setDebugComment(prev => `${prev} \n ${googleCredential.toString()}`)
          const googledata = await auth().signInWithCredential(googleCredential);
+         console.log('useKyonGoogleLogin:',googledata?.user.email?.split('@'));
          const profileData = {
            name: googledata.additionalUserInfo?.profile?.given_name,
            email: googledata.user.email,
            //@ts-ignore
-           user: googledata?.user.email.replace('.','')
+           user: googledata?.user.email?.split('@')[0].replaceAll('.','')
          };
          await setItem('profile',JSON.stringify(profileData))
        } else {
@@ -35,8 +39,9 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
            name: googledata.additionalUserInfo?.profile?.given_name,
            email: googledata.user.email,
            //@ts-ignore
-           user: googledata?.user.email.replace('.','')
+           user: googledata?.user.email?.split('@')[0].replaceAll('.','')
          };
+         setDebugComment(prev => `${prev} \n\n ${JSON.stringify(profileData)}`)
          await setItem('profile',JSON.stringify(profileData))
        }
       return 'logged'
