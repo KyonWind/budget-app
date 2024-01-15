@@ -61,8 +61,9 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
 
   const validate = useCallback(() => {
+    console.log('FormPago:item',data.description.trim() === '', !data.description);
     for (let item of Object.values(data)) {
-      if (!item) {
+      if (!item || item.trim() === '') {
         setIsDisable(true);
         break;
       } else {
@@ -128,7 +129,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
     let profile = await getItem('profile');
     //@ts-ignore
     profile = JSON.parse(profile);
-    console.log('FormPago:addPaymentTypes',`/user/${profile?.user}`);
+    console.log('FormPago:addPaymentTypes',`/users/${profile?.user}`);
     try {
        database()
         .ref(`users/${profile?.user}/paymentMethods`)
@@ -224,18 +225,29 @@ export const FormPago = ({setData, data}: IFormPago) => {
       />
       <KyonMasterButton disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
       <KyonMasterText textStyle={{color: '#d71c1c',fontSize: 40}} text={isPaid ? 'PAGADO' : ''} />
-      <KyonMasterModal headerTitle={'Agregar nuevo metodo de pago'} footerOptions={[<KyonMasterButton
-        onPress={() => addPaymentTypes()}
-        title={'Agregar'}
-      />]} open={openPaymentModal} close={() => setOpenPaymentModal(!openPaymentModal)} options={[<KyonMasterInput
-        type={'select'}
-        label={'descripcion'}
-        value={newPayment}
-        placeholder={'descripcion'}
-        onChangeText={value =>
-          setNewPayment(value)
-        }
-      />]}/>
+      <KyonMasterModal
+        headerTitle={'Agregar nuevo metodo de pago'}
+        footerOptions={[
+          <KyonMasterButton
+            key={12345}
+            onPress={() => addPaymentTypes()}
+            title={'Agregar'}
+          />
+        ]}
+        open={openPaymentModal}
+        close={() => setOpenPaymentModal(!openPaymentModal)}
+        options={[
+          <KyonMasterInput
+            key={12345}
+            type={'select'}
+            label={'descripcion'}
+            value={newPayment}
+            placeholder={'descripcion'}
+            onChangeText={value =>
+              setNewPayment(value)
+            }
+          />
+        ]}/>
     </View>
   );
 };

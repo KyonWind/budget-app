@@ -16,6 +16,8 @@ export const KyonRouter = () => {
   const [routes, setRoutes] = useState<any>()
   const [initialRoute, setinitialRoute] = useState<any>('loading')
 
+  console.log('KyonRouter:isLogged',isLogged);
+
   const selectProfile = useCallback( () => {
     if(isLogged) {
       setActiveProfile('private');

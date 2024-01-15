@@ -25,11 +25,7 @@ export const KyonMasterButton = ({
       theme?.KyonMasterButton?.variants[variant]?.wrapper
     : {};
 
-  console.log('KyonMasterButton:variant',variant);
-  console.log('KyonMasterButton:variantWrapper',variantWrapper);
-
   const themeButton = theme?.KyonMasterButton?.defaultProps?.button ?? {};
-
   const themeWrapper = theme?.KyonMasterButton?.defaultProps?.wrapper ?? {};
   const themeText = theme?.KyonMasterButton?.defaultProps?.text ?? {};
 

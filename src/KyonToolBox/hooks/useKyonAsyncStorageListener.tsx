@@ -5,7 +5,7 @@ export const useKyonAsyncStorageListener = () => {
   const getItem = async (key: string) => {
     try {
       const item = await AsyncStorage.getItem(key);
-      return item != null ? item : null;
+      return item !== null ? item : null;
     } catch (e: any) {
       throw  new Error(e);
     }
