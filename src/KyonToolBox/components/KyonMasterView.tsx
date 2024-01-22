@@ -8,7 +8,10 @@ export const KyonMasterView = ({
   wrapperStyle,
   variant,
   debug = false,
-  children
+  children,
+  justifyContent,
+  alignItems,
+  flexDirection
 }: IKyonMasterView) => {
 
   const {theme} = useThemeContext();
@@ -32,6 +35,9 @@ export const KyonMasterView = ({
     ...themeView,
     ...wrapperStyle,
     ...variantWrapper,
+    justifyContent,
+    alignItems,
+    flexDirection
   };
 
   return (

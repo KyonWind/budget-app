@@ -4,4 +4,5 @@ export const formInitialState = {
   cost: '',
   url: '',
   paymentMethod: '',
+  category: '',
 };

@@ -60,8 +60,10 @@ export const KyonMasterButton = ({
   };
 
   return (
-    <Animated.View style={VIEW_STYLE}>
-      <Pressable disabled={disabled} onPress={onPress} >
+    <Animated.View>
+      <Pressable style={({ pressed }) => ({...VIEW_STYLE,
+        backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : VIEW_STYLE.backgroundColor
+        })} disabled={disabled} onPress={onPress} >
         <KyonMasterText textStyle={TEXT_STYLE} wrapperStyle={{padding:0}} text={title.toUpperCase()}/>
       </Pressable>
     </Animated.View>

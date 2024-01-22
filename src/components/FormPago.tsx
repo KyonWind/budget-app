@@ -1,5 +1,5 @@
 import { KyonMasterInput, KyonMasterText } from "../KyonToolBox/components";
-import { Alert, Button, Linking, Modal, ScrollView, Text, View } from "react-native";
+import { Linking, View } from "react-native";
 import React, {
   Dispatch,
   SetStateAction,
@@ -8,16 +8,17 @@ import React, {
   useState,
 } from 'react';
 import {IAppLinks} from '../../App.tsx';
-import {IData} from '../pages/Home.tsx';
+import {IGasto} from '../pages/Home.tsx';
 import database from '@react-native-firebase/database';
 import {formInitialState} from '../const';
 import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
+import { useNavigation } from "@react-navigation/native";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
-  data: IData;
+  data: IGasto;
 }
 
 const appsLinks: IAppLinks[] = [
@@ -54,10 +55,12 @@ const appsLinks: IAppLinks[] = [
 export const FormPago = ({setData, data}: IFormPago) => {
   const [isPaid, setIsPaid] = useState(false);
   const [paymentTypes, setPaymentTypes] = useState([]);
+  const [categories, setCategories] = useState<any>();
   const [newPayment, setNewPayment] = useState('');
-  const [openPaymentModal, setOpenPaymentModal] = useState(false)
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [isDisabled, setIsDisable] = useState<boolean>(true);
   const {getItem} = useKyonAsyncStorageListener();
+  const navigation = useNavigation();
 
 
   const validate = useCallback(() => {
@@ -94,7 +97,8 @@ export const FormPago = ({setData, data}: IFormPago) => {
       description: data.description,
       cost: data.cost,
       paymentMethod: data.paymentMethod,
-      date: new Date().toLocaleDateString(),
+      category: data.category,
+      date: new Date().toLocaleDateString('en-GB'),
     });
     if (data.url !== '') {
       Linking.openURL(data.url).catch(err => console.log('App:e', err));
@@ -102,6 +106,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
       setIsPaid(true);
     }
     setIsPaid(true);
+    navigation.navigate('home');
   },[data]);
 
   const getPaymentTypes = useCallback( async () => {
@@ -111,24 +116,38 @@ export const FormPago = ({setData, data}: IFormPago) => {
     try {
       await database().ref(`/users/${profile?.user}/paymentMethods`).once('value')
         .then(snapshot => {
-          console.log('User data: ',Array.from(Object.values(snapshot.val())));
           setPaymentTypes(Array.from(Object.values(snapshot.val())))
         });
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }
 
-  },[])
+  },[paymentTypes])
+
+  const getCategory = useCallback( async () => {
+    let profile = await getItem('profile');
+    //@ts-ignore
+    profile = JSON.parse(profile);
+    try {
+      // @ts-ignore
+      let category = await database().ref(`/Category`).once('value');
+      // @ts-ignore
+      category = Array.from(Object.values(category.val()));
+      setCategories(category);
+    } catch (e) {
+      console.log('getPaymentTypes:',e);
+    }
+  },[categories,setCategories])
 
   useEffect(() => {
     getPaymentTypes();
+    getCategory();
   }, []);
 
   const addPaymentTypes = useCallback( async () => {
     let profile = await getItem('profile');
     //@ts-ignore
     profile = JSON.parse(profile);
-    console.log('FormPago:addPaymentTypes',`/users/${profile?.user}`);
     try {
        database()
         .ref(`users/${profile?.user}/paymentMethods`)
@@ -152,7 +171,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         inputMode={'decimal'}
         value={data.cost}
         onChangeText={value =>
-          setData((prev: IData) => ({
+          setData((prev: IGasto) => ({
             ...prev,
             cost: value,
           }))
@@ -160,12 +179,31 @@ export const FormPago = ({setData, data}: IFormPago) => {
         label={'importe'}
       />
       <KyonMasterInput
+        type={'modal'}
+        label={'categoria'}
+        value={data.category}
+        placeholder={'categoria'}
+        onChangeText={value =>
+          setData((prev: IGasto) => ({
+            ...prev,
+            category: value,
+          }))
+
+        }
+        options={categories?.map((category: string, index: number) => {
+          return <KyonMasterButton key={index} title={category} onPress={()=> setData((prev: IGasto) => ({
+            ...prev,
+            category: category,
+          }))} />;
+        })}
+      />
+      <KyonMasterInput
         type={'select'}
         label={'descripcion'}
         value={data.description}
         placeholder={'descripcion'}
         onChangeText={value =>
-          setData((prev: IData) => ({
+          setData((prev: IGasto) => ({
             ...prev,
             description: value,
           }))
@@ -177,14 +215,14 @@ export const FormPago = ({setData, data}: IFormPago) => {
         value={data.type}
         placeholder={'Visa, Efectivo , etc'}
         onChangeText={value =>
-          setData((prev: IData) => ({
+          setData((prev: IGasto) => ({
             ...prev,
             type: value,
           }))
 
         }
         options={paymentTypes.map((type: {name: string}, index) => {
-          return <KyonMasterButton key={index} title={type.name} onPress={()=> setData((prev: IData) => ({
+          return <KyonMasterButton key={index} title={type.name} onPress={()=> setData((prev: IGasto) => ({
             ...prev,
             type: type.name,
           }))} />;
@@ -205,7 +243,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
               <KyonMasterButton
                 title={app.name}
                 onPress={() =>
-                  setData((prev: IData) => ({
+                  setData((prev: IGasto) => ({
                     ...prev,
                     url: app.url || app.name,
                     paymentMethod: app.name,
@@ -216,7 +254,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
           );
         })}
         onChangeText={value =>
-          setData((prev: IData) => ({
+          setData((prev: IGasto) => ({
             ...prev,
             paymentMethod: value,
           }))

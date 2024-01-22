@@ -21,7 +21,6 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
          const googleCredential = auth.GoogleAuthProvider.credential(token);
          setDebugComment(prev => `${prev} \n ${googleCredential.toString()}`)
          const googledata = await auth().signInWithCredential(googleCredential);
-         console.log('useKyonGoogleLogin:',googledata?.user.email?.split('@'));
          const profileData = {
            name: googledata.additionalUserInfo?.profile?.given_name,
            email: googledata.user.email,

@@ -23,6 +23,23 @@ export const KyonMasterButton: IKyonMasterButtonStyle = {
       wrapper: {
         backgroundColor: '#ee2e2e'
       }
+    },
+    floatingButton: {
+      wrapper: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 56,
+        height: 56,
+        borderRadius: 50,
+        backgroundColor: '#63C6F4',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      text: {
+        fontSize: 25
+      }
     }
   },
 };
