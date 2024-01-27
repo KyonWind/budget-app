@@ -8,69 +8,51 @@ import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx
 import { useNavigation } from "@react-navigation/native";
 
 export interface IGasto {
-  name: string;
-  type: string;
-  description: string;
-  cost: string;
-  category: string;
+  name?: string;
+  type?: string;
+  description?: string;
+  cost?: string;
+  category?: string;
   url: string;
-  paymentMethod: string;
-  date: string;
+  paymentMethod?: string;
+  date?: string;
 }
-
-
-
 export const Home = () => {
 
   const navigation = useNavigation();
-  const [lastPayments, setLastPayments] = useState<IGasto[]>();
+  const [lastPayments, setLastPayments] = useState<IGasto[]>([]);
   const [categories, setCategories] = useState<any>();
   const [total, setTotal] = useState<any>(0);
   const scrollViewRef = useRef();
 
   const handleScroll = async (event) => {
     if (event.nativeEvent.contentOffset.y === 0) {
-      try {
-        let gastos = await database().ref(`/gastos`).once('value');
-        gastos = Array.from(Object.values(gastos.val()));
-        gastos = gastos.sort((a,b) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
-        setLastPayments(gastos);
-      } catch (e) {
-        console.log('getPaymentTypes:',e);
-      }
-      // Fire your function here
+       await getPayments()
     }
   }
 
-  const getPayments = useCallback( async () => {
+  const getPayments = async () => {
     try {
-     let gastos = await database().ref(`/gastos`).once('value');
-      // @ts-ignore
-     gastos = Array.from(Object.values(gastos.val()));
-     // @ts-ignore
-      setLastPayments(gastos.sort((a,b) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB')));
-      sortCostByCategory(gastos)
+      let expenses = await database().ref(`/gastos`).once('value');
+      let ArrayExpenses: any[] = Array.from(Object.values(expenses.val()));
+      ArrayExpenses = ArrayExpenses.sort((a,b) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
+      sortCostByCategory(ArrayExpenses);
+      setLastPayments(ArrayExpenses);
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }
-  },[lastPayments])
+  }
 
   const sortCostByCategory = (payments: IGasto[]) => {
-    const result = payments.reduce((acc,obj) => {
+
+    const result = {}
+      payments.forEach((obj) => {
       let key = obj.category;
-      if(!acc[key]) {
-        acc[key] = +obj.cost;
+      if(!result[key]) {
+        result[key] = +obj.cost;
       } else {
-        acc[key] += +obj.cost;
+        result[key] += +obj.cost;
       }
-      delete acc.cost;
-      delete acc.description;
-      delete acc.category;
-      delete acc.date;
-      delete acc.name;
-      delete acc.paymentMethod;
-      delete acc.type;
-      return acc;
     });
     setCategories(result);
     const total = Object.values(result).reduce((acc, obj) => {
@@ -78,7 +60,6 @@ export const Home = () => {
       return acc
     });
     setTotal(total.toLocaleString('de-DE', {maximumFractionDigits: 2 }));
-    console.log('Home:sortCostByCategory',total);
   }
 
 
