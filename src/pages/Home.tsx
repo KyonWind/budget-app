@@ -11,7 +11,7 @@ export interface IGasto {
   name?: string;
   type?: string;
   description?: string;
-  cost?: string;
+  cost: string;
   category?: string;
   url: string;
   paymentMethod?: string;
@@ -45,13 +45,15 @@ export const Home = () => {
 
   const sortCostByCategory = (payments: IGasto[]) => {
 
-    const result = {}
+    const result: {[k:string]: number} = {}
       payments.forEach((obj) => {
       let key = obj.category;
+      if (typeof key === "string"){
       if(!result[key]) {
         result[key] = +obj.cost;
       } else {
         result[key] += +obj.cost;
+      }
       }
     });
     setCategories(result);
