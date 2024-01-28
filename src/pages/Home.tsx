@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, Switch } from "react-native";
 import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
 import { KyonMasterText } from "../KyonToolBox/components";
 import database from "@react-native-firebase/database";
 import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
+import { useBudgetApiDolarContext } from "../context/BudgetApiDolarContext.tsx";
 
 export interface IGasto {
   name?: string;
   type?: string;
   description?: string;
   cost: string;
+  quotationUSD: number;
   category?: string;
   url: string;
   paymentMethod?: string;
@@ -24,6 +26,12 @@ export const Home = () => {
   const [categories, setCategories] = useState<any>();
   const [total, setTotal] = useState<any>(0);
   const scrollViewRef = useRef();
+  const {quotation } = useBudgetApiDolarContext();
+  const [showOnDollars, setShowOnDollars] = useState(false);
+
+  console.log('Home:Home',showOnDollars);
+
+
 
   const handleScroll = async (event) => {
     if (event.nativeEvent.contentOffset.y === 0) {
@@ -50,9 +58,9 @@ export const Home = () => {
       let key = obj.category;
       if (typeof key === "string"){
       if(!result[key]) {
-        result[key] = +obj.cost;
+        result[key] = showOnDollars ? +obj.cost / (obj.quotationUSD ?? quotation) : +obj.cost;
       } else {
-        result[key] += +obj.cost;
+        result[key] += showOnDollars ? +obj.cost / (obj.quotationUSD ?? quotation) : +obj.cost;
       }
       }
     });
@@ -68,7 +76,8 @@ export const Home = () => {
 
   useEffect(() => {
     getPayments();
-  }, []);
+  }, [showOnDollars]);
+
 
   return (
     <KyonMasterView variant={'container'} wrapperStyle={{height: '100%'}}>
@@ -81,7 +90,7 @@ export const Home = () => {
               <KyonMasterText variant={'cardText'}  text={`User : ${payment.name}`} wrapperStyle={{marginRight:15}}/>
               <KyonMasterText variant={'cardText'}  text={`Fecha : ${payment.date}`}/>
             </KyonMasterView>
-            <KyonMasterText variant={'cardText'}  text={`Cost : ${(+payment.cost).toLocaleString('de-DE', {maximumFractionDigits: 2 })}`}/>
+            <KyonMasterText variant={'cardText'}  text={`Cost ${showOnDollars ? 'U$D' : 'ARG'}: ${(showOnDollars ? +payment.cost / (payment.quotationUSD ?? quotation) : +payment.cost).toLocaleString('de-DE', {maximumFractionDigits: 2 })}`}/>
             <KyonMasterText variant={'cardText'}  text={`Categoria : ${payment.category}`}/>
             <KyonMasterText variant={'cardText'} textStyle={{fontSize:10}}  text={`Description : ${payment.description}`}/>
           </KyonMasterView>
@@ -91,17 +100,21 @@ export const Home = () => {
       { categories &&
       <KyonMasterView variant={'card'}  wrapperStyle={{padding: 15}}>
         { Object.keys(categories).map((key, index) => (
-          <KyonMasterText key={index}  variant={"cardText"}  text={`${key}: $${categories[key].toLocaleString('de-DE', {maximumFractionDigits: 2 })}`} wrapperStyle={{ borderBottomColor: 'lightgray', borderBottomWidth: 1, height:35, width: 300 }} />
+          <KyonMasterText key={index}  variant={"cardText"}  text={`${key} ${showOnDollars ? 'U$D' : 'ARG'}: ${(categories[key]).toLocaleString('de-DE', {maximumFractionDigits: 2 })}`} wrapperStyle={{ borderBottomColor: 'lightgray', borderBottomWidth: 1, height:35, width: 300 }} />
         ))}
       </KyonMasterView>
       }
       <KyonMasterView variant={'container-row'} flexDirection={'row'}>
         <KyonMasterText variant={"h1"}  text={'Total: '} />
-        <KyonMasterText variant={"h1"}  text={`$${total}`} />
+        <KyonMasterText variant={"h1"}  text={`${showOnDollars ? 'U$D' : 'ARG'}${total}`} />
       </KyonMasterView>
       <KyonMasterButton onPress={() => {
         navigation.navigate('newPayment');
       }} wrapperStyle={{width: 300}} title={'nuevo pago'}/>
+      <KyonMasterView debug flexDirection={'row'}>
+        <Switch value={showOnDollars} onChange={()=> setShowOnDollars((prev) => !prev)}/>
+        <KyonMasterText text={'U$D'}/>
+      </KyonMasterView>
     </KyonMasterView>
   );
 };

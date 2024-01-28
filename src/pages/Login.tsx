@@ -11,7 +11,6 @@ export const Login = () => {
     "907797952601-k7uod4pcesda7dt7metuup7q6cb194s7.apps.googleusercontent.com"
   );
   const { existOnFirebase } = useBudgetFirebase()
-  const { debugComment} = useBudgetFirebase();
 
   const googleLogin = async () => {
     const result = await onGoogleButtonPress();

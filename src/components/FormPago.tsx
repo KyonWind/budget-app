@@ -15,6 +15,7 @@ import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncSt
 import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
+import { useBudgetApiDolarContext } from "../context/BudgetApiDolarContext.tsx";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
@@ -59,9 +60,9 @@ export const FormPago = ({setData, data}: IFormPago) => {
   const [newPayment, setNewPayment] = useState('');
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [isDisabled, setIsDisable] = useState<boolean>(true);
+  const {quotation } = useBudgetApiDolarContext();
   const {getItem} = useKyonAsyncStorageListener();
   const navigation = useNavigation();
-
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
@@ -96,6 +97,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
       type: data.type,
       description: data.description,
       cost: data.cost,
+      quotationUSD: quotation,
       paymentMethod: data.paymentMethod,
       category: data.category,
       date: new Date().toLocaleDateString('en-GB'),

@@ -5,6 +5,7 @@ import { KyonRouterContextProvider } from "./src/context/KyonRouterContext.tsx";
 import { KyonRouter } from "./src/router/KyonRouter.tsx";
 import { useKyonAsyncStorageListener } from "./src/KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 import { BudgetFirebaseProvider } from "./src/context/BudgetFireBaseContext";
+import { BudgetApiDolarContextProvider } from "./src/context/BudgetApiDolarContext.tsx";
 export interface IAppLinks {
   name: string;
   url: string;
@@ -17,7 +18,9 @@ function App(): React.JSX.Element {
     <KyonThemeContextProvider theme={KyonMasterTheme}>
       <KyonRouterContextProvider>
         <BudgetFirebaseProvider>
+          <BudgetApiDolarContextProvider>
             <KyonRouter/>
+          </BudgetApiDolarContextProvider>
         </BudgetFirebaseProvider>
       </KyonRouterContextProvider>
     </KyonThemeContextProvider>
