@@ -15,7 +15,7 @@ import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncSt
 import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetApiDolarContext } from "../context/BudgetApiDolarContext.tsx";
+import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;

@@ -4,12 +4,15 @@ import { useCallback, useEffect, useState } from "react";
 import { useKyonAsyncStorageListener } from "./useKyonAsyncStorageListener.tsx";
 import { useKyonRouterContext } from "../../context/KyonRouterContext.tsx";
 import { useBudgetFirebase } from "../../context/BudgetFireBaseContext";
+import { useBudgetProfileContext } from "../../context/BudgetProfileContext/BudgetProfileContext.tsx";
 
 export const useKyonGoogleLogin = ( webClientId?: string) => {
 
   const { setItem, getItem } = useKyonAsyncStorageListener();
   const { isLogged, setIsLogged } = useKyonRouterContext();
   const {setDebugComment} = useBudgetFirebase();
+  const { getProfile } = useBudgetProfileContext();
+
    const onGoogleButtonPress = useCallback(async () => {
      try {
        GoogleSignin.configure({
@@ -42,6 +45,7 @@ export const useKyonGoogleLogin = ( webClientId?: string) => {
          };
          setDebugComment(prev => `${prev} \n\n ${JSON.stringify(profileData)}`)
          await setItem('profile',JSON.stringify(profileData))
+         getProfile();
        }
       return 'logged'
 

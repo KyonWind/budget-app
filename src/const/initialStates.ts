@@ -16,3 +16,10 @@ export const usdApiValue = {
   nombre: "",
   venta: 0
 };
+
+export const profileInitialState = {
+    name: '',
+    email: '',
+    user: ''
+
+}

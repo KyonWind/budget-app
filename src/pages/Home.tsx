@@ -6,7 +6,8 @@ import database from "@react-native-firebase/database";
 import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetApiDolarContext } from "../context/BudgetApiDolarContext.tsx";
+import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
+import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
 
 export interface IGasto {
   name?: string;
@@ -29,7 +30,11 @@ export const Home = () => {
   const {quotation } = useBudgetApiDolarContext();
   const [showOnDollars, setShowOnDollars] = useState(false);
 
-  console.log('Home:Home',showOnDollars);
+  const { profile } = useBudgetProfileContext();
+
+  console.log('Home:profile',profile);
+
+
 
 
 
@@ -43,6 +48,7 @@ export const Home = () => {
     try {
       let expenses = await database().ref(`/gastos`).once('value');
       let ArrayExpenses: any[] = Array.from(Object.values(expenses.val()));
+      ArrayExpenses = ArrayExpenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
       ArrayExpenses = ArrayExpenses.sort((a,b) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
       sortCostByCategory(ArrayExpenses);
       setLastPayments(ArrayExpenses);
