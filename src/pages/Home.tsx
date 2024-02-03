@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollView, Switch } from "react-native";
+import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Switch } from "react-native";
 import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
 import { KyonMasterText } from "../KyonToolBox/components";
 import database from "@react-native-firebase/database";
@@ -14,7 +14,7 @@ export interface IGasto {
   type?: string;
   description?: string;
   cost: string;
-  quotationUSD: number;
+  quotationUSD?: number;
   category?: string;
   url: string;
   paymentMethod?: string;
@@ -26,7 +26,7 @@ export const Home = () => {
   const [lastPayments, setLastPayments] = useState<IGasto[]>([]);
   const [categories, setCategories] = useState<any>();
   const [total, setTotal] = useState<any>(0);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView | null>(null);
   const {quotation } = useBudgetApiDolarContext();
   const [showOnDollars, setShowOnDollars] = useState(false);
 
@@ -38,7 +38,7 @@ export const Home = () => {
 
 
 
-  const handleScroll = async (event) => {
+  const handleScroll = async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y === 0) {
        await getPayments()
     }
@@ -49,7 +49,8 @@ export const Home = () => {
       let expenses = await database().ref(`/gastos`).once('value');
       let ArrayExpenses: any[] = Array.from(Object.values(expenses.val()));
       ArrayExpenses = ArrayExpenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
-      ArrayExpenses = ArrayExpenses.sort((a,b) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
+      // @ts-ignore
+      ArrayExpenses = ArrayExpenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
       sortCostByCategory(ArrayExpenses);
       setLastPayments(ArrayExpenses);
     } catch (e) {
@@ -115,7 +116,7 @@ export const Home = () => {
         <KyonMasterText variant={"h1"}  text={`${showOnDollars ? 'U$D' : 'ARG'}${total}`} />
       </KyonMasterView>
       <KyonMasterButton onPress={() => {
-        navigation.navigate('newPayment');
+        navigation.navigate('newPayment' as never);
       }} wrapperStyle={{width: 300}} title={'nuevo pago'}/>
       <KyonMasterView debug flexDirection={'row'}>
         <Switch value={showOnDollars} onChange={()=> setShowOnDollars((prev) => !prev)}/>

@@ -16,6 +16,7 @@ import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
 import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
+import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
@@ -63,6 +64,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
   const {quotation } = useBudgetApiDolarContext();
   const {getItem} = useKyonAsyncStorageListener();
   const navigation = useNavigation();
+  const { profile } = useBudgetProfileContext();
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
@@ -89,11 +91,8 @@ export const FormPago = ({setData, data}: IFormPago) => {
   }, [isPaid]);
 
   const savePayment = useCallback( async () => {
-    let profile = await getItem('profile');
-    //@ts-ignore
-    profile = JSON.parse(profile);
     database().ref('/gastos').push({
-      name: profile?.name,
+      name: profile.name,
       type: data.type,
       description: data.description,
       cost: data.cost,
@@ -108,13 +107,10 @@ export const FormPago = ({setData, data}: IFormPago) => {
       setIsPaid(true);
     }
     setIsPaid(true);
-    navigation.navigate('home');
+    navigation.navigate('home' as never);
   },[data]);
 
   const getPaymentTypes = useCallback( async () => {
-    let profile = await getItem('profile');
-    //@ts-ignore
-    profile = JSON.parse(profile);
     try {
       await database().ref(`/users/${profile?.user}/paymentMethods`).once('value')
         .then(snapshot => {
@@ -147,9 +143,6 @@ export const FormPago = ({setData, data}: IFormPago) => {
   }, []);
 
   const addPaymentTypes = useCallback( async () => {
-    let profile = await getItem('profile');
-    //@ts-ignore
-    profile = JSON.parse(profile);
     try {
        database()
         .ref(`users/${profile?.user}/paymentMethods`)
