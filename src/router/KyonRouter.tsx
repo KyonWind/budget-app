@@ -6,6 +6,8 @@ import { profiles } from "./profiles/profiles.ts";
 import { Loading } from "../pages/Loading.tsx";
 import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
 import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
+import { KyonMasterText } from "../KyonToolBox/components";
+import { FooterMenu } from "../components/FooterMenu.tsx";
 
 export const KyonRouter = () => {
 
@@ -44,6 +46,8 @@ export const KyonRouter = () => {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{headerShown: false}}>
           {routes ? routes: <Stack.Screen  name={'loading'} component={Loading}/>}
       </Stack.Navigator>
+      { routes && <FooterMenu/>}
+
     </NavigationContainer>
   )
 }

@@ -118,7 +118,7 @@ export const Home = () => {
       <KyonMasterButton onPress={() => {
         navigation.navigate('newPayment' as never);
       }} wrapperStyle={{width: 300}} title={'nuevo pago'}/>
-      <KyonMasterView debug flexDirection={'row'}>
+      <KyonMasterView flexDirection={'row'}>
         <Switch value={showOnDollars} onChange={()=> setShowOnDollars((prev) => !prev)}/>
         <KyonMasterText text={'U$D'}/>
       </KyonMasterView>

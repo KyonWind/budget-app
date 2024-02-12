@@ -43,7 +43,10 @@ export const KyonMasterView: IKyonMasterViewStyle = {
      },
     'container-row': {
       view: {
-        display:'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width:'100%',
         flexWrap: 'wrap',
         padding: 0,
         margin: 0,
