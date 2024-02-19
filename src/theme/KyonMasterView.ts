@@ -18,8 +18,7 @@ export const KyonMasterView: IKyonMasterViewStyle = {
       view: {
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: 15,
-        marginTop: 15,
+        margin: 15,
         shadowColor: '#000',
         shadowOffset: {
           width: 1,
@@ -41,7 +40,7 @@ export const KyonMasterView: IKyonMasterViewStyle = {
        margin: 0,
      }
      },
-    'container-row': {
+    'menu': {
       view: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -50,6 +49,16 @@ export const KyonMasterView: IKyonMasterViewStyle = {
         flexWrap: 'wrap',
         padding: 0,
         margin: 0,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 1,
+          height: 10
+        },
+        paddingLeft: 10,
+        backgroundColor: '#ffffff',
+        shadowOpacity: 0.55,
+        shadowRadius: 3.84,
+        elevation: 10,
       }
     }
   },

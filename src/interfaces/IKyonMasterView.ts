@@ -1,7 +1,7 @@
-import type { ViewStyle } from 'react-native';
+import type { ViewProps, ViewStyle } from "react-native";
 import { ReactNode } from "react";
 
-export interface IKyonMasterView {
+export interface IKyonMasterView extends ViewProps {
   wrapperStyle?: ViewStyle;
   debug?: boolean;
   variant?: string;

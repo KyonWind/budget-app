@@ -11,7 +11,8 @@ export const KyonMasterView = ({
   children,
   justifyContent,
   alignItems,
-  flexDirection
+  flexDirection,
+  onMagicTap,
 }: IKyonMasterView) => {
 
   const {theme} = useThemeContext();
@@ -20,9 +21,6 @@ export const KyonMasterView = ({
     ?  //@ts-ignore
       theme?.KyonMasterView?.variants[variant]?.view
     : {};
-
-  console.log('KyonMasterView:variant',variant);
-  console.log('KyonMasterView:variantWrapper',variantWrapper);
 
   const themeView = theme?.KyonMasterView?.defaultProps?.view ?? {};
 
@@ -48,17 +46,17 @@ export const KyonMasterView = ({
     alignSelf: 'center',
     ...debugStyle,
     ...themeView,
-    ...wrapperStyle,
     ...variantWrapper,
     ...FlexDirection,
     ...JustifyContent,
     ...AlignItems,
+    ...wrapperStyle,
 
 
   };
 
   return (
-    <Animated.View style={VIEW_STYLE}>
+    <Animated.View onMagicTap={onMagicTap} style={VIEW_STYLE}>
       {children}
     </Animated.View>
   );

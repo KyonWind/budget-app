@@ -32,12 +32,6 @@ export const Home = () => {
 
   const { profile } = useBudgetProfileContext();
 
-  console.log('Home:profile',profile);
-
-
-
-
-
   const handleScroll = async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y === 0) {
        await getPayments()

@@ -4,9 +4,6 @@ import { useKyonRouterContext } from "../context/KyonRouterContext.tsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { profiles } from "./profiles/profiles.ts";
 import { Loading } from "../pages/Loading.tsx";
-import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterText } from "../KyonToolBox/components";
 import { FooterMenu } from "../components/FooterMenu.tsx";
 
 export const KyonRouter = () => {

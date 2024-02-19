@@ -31,12 +31,10 @@ export const BudgetApiDolarContextProvider: FC<BudgetApiDolarContextProvider> = 
       return
 
     } catch (e) {
-      console.log('BudgetApiDolarContext:getDollars',e);
     }
   }
 
   useEffect(() => {
-    console.log('BudgetApiDolarContext:',quotation);
     getQuotation()
   }, []);
 

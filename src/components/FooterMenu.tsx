@@ -9,15 +9,15 @@ export const FooterMenu = () => {
   const navigation = useNavigation();
 
   return(
-    <KyonMasterView variant={'container-row'} debug>
+    <KyonMasterView variant={'menu'}>
       <Pressable onPress={() => navigation.navigate('payment' as never) }>
-      <KyonMasterText text={'Pagos'} debug/>
+      <KyonMasterText text={'Pagos'}/>
       </Pressable>
       <Pressable onPress={() => navigation.navigate('home' as never) }>
-      <KyonMasterText text={'Home'} debug/>
+      <KyonMasterText text={'Home'}/>
       </Pressable>
       <Pressable onPress={() => navigation.navigate('cards' as never) }>
-      <KyonMasterText text={'Tarjetas'} debug/>
+      <KyonMasterText text={'Metodo'}/>
       </Pressable>
     </KyonMasterView>
   )

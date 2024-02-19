@@ -7,6 +7,7 @@ import { useKyonAsyncStorageListener } from "./src/KyonToolBox/hooks/useKyonAsyn
 import { BudgetFirebaseProvider } from "./src/context/BudgetFireBaseContext";
 import { BudgetApiDolarContextProvider } from "./src/context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
 import { BudgetProfileContextProvider } from "./src/context/BudgetProfileContext/BudgetProfileContext.tsx";
+import { BudgetPaymentContextProvider } from "./src/context/BudgetPaymentContext/BudgetPaymentContext.tsx";
 export interface IAppLinks {
   name: string;
   url: string;
@@ -21,7 +22,9 @@ function App(): React.JSX.Element {
         <BudgetFirebaseProvider>
           <BudgetProfileContextProvider>
             <BudgetApiDolarContextProvider>
+              <BudgetPaymentContextProvider>
               <KyonRouter/>
+              </BudgetPaymentContextProvider>
             </BudgetApiDolarContextProvider>
           </BudgetProfileContextProvider>
         </BudgetFirebaseProvider>
