@@ -3,16 +3,13 @@ import { IGasto } from "../../../pages/Home.tsx";
 import { useBudgetProfileContext } from "../../BudgetProfileContext/BudgetProfileContext.tsx";
 import { useState } from "react";
 import { IPayment } from "../BudgetPaymentInterfaces.ts";
-import { FireBaseService } from "../../../services/firebaseService/FirebaseService.ts";
 
-export const useGetPayments = () => {
+export const useGetPaymentsMethod = () => {
   const { profile } = useBudgetProfileContext();
-  const [payments, setPayments] = useState<IPayment[]>()
 
-  const getPayments = async ():Promise<string> => {
+  const getPaymentsMethods = async ():Promise<string> => {
     try {
-      //let expenses = await database().ref(`/gastos`).once('value');
-      let expenses = await FireBaseService.get('gastos');
+      let expenses = await database().ref(`/${profile.user}/paymentMethods`).once('value');
       const ExpensesMap = new Map<string, IPayment>();
       Object.keys(expenses.val()).forEach(id => {
         const r =  expenses.val()[id];
@@ -51,8 +48,7 @@ export const useGetPayments = () => {
   }
 
   return {
-    payments,
-    getPayments
+    getPaymentsMethods
   }
 
 }

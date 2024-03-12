@@ -8,6 +8,7 @@ import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx
 import { useNavigation } from "@react-navigation/native";
 import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
 import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
+import { FireBaseService } from "../services/firebaseService/FirebaseService.ts";
 
 export interface IGasto {
   name?: string;
@@ -19,6 +20,7 @@ export interface IGasto {
   url: string;
   paymentMethod?: string;
   date?: string;
+  id?: string;
 }
 export const Home = () => {
 
@@ -40,7 +42,8 @@ export const Home = () => {
 
   const getPayments = async () => {
     try {
-      let expenses = await database().ref(`/gastos`).once('value');
+      // let expenses = await database().ref(`/gastos`).once('value');
+      let expenses = await FireBaseService.get('gastos');
       let ArrayExpenses: any[] = Array.from(Object.values(expenses.val()));
       ArrayExpenses = ArrayExpenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
       // @ts-ignore

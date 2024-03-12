@@ -17,6 +17,7 @@ import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx
 import { useNavigation } from "@react-navigation/native";
 import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
 import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
+import { FireBaseService } from "../services/firebaseService/FirebaseService.ts";
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
@@ -68,11 +69,13 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
-      if (!item || item.trim() === '') {
+      if(typeof item !== "number") {
+      if (!item || (item?.trim() === '')) {
         setIsDisable(true);
         break;
       } else {
         setIsDisable(false);
+      }
       }
     }
   }, [data]);
@@ -91,7 +94,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
   }, [isPaid]);
 
   const savePayment = useCallback( async () => {
-    database().ref('/gastos').push({
+    const response =  FireBaseService.post('gastos',{
       name: profile.name,
       type: data.type,
       description: data.description,
@@ -99,7 +102,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
       quotationUSD: quotation,
       paymentMethod: data.paymentMethod,
       category: data.category,
-      date: new Date().toLocaleDateString('en-GB'),
+      date: data.date,
     });
     if (data.url !== '') {
       Linking.openURL(data.url).catch(err => console.log('App:e', err));
@@ -108,6 +111,28 @@ export const FormPago = ({setData, data}: IFormPago) => {
     }
     setIsPaid(true);
     navigation.navigate('home' as never);
+  },[data]);
+
+  const editPayment = useCallback( async () => {
+    FireBaseService.put('gastos', data?.id, {
+      name: data.name,
+      type: data.type,
+      description: data.description,
+      cost: data.cost,
+      quotationUSD: data.quotationUSD,
+      paymentMethod: data.paymentMethod,
+      category: data.category,
+      date: data.date,
+    });
+    console.log('%cFormPago:','color:yellow', data.url !== undefined);
+    if (data.url !== undefined && data.url !== '') {
+      Linking.openURL(data.url).catch(err => console.log('App:e', err));
+    } else {
+      setIsPaid(true);
+    }
+    setIsPaid(true);
+    console.log('%cFormPago:','color:yellow','backhome');
+    navigation.navigate('payment' as never);
   },[data]);
 
   const getPaymentTypes = useCallback( async () => {
@@ -128,7 +153,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
     profile = JSON.parse(profile);
     try {
       // @ts-ignore
-      let category = await database().ref(`/Category`).once('value');
+      let category = await FireBaseService.get('Category');
       // @ts-ignore
       category = Array.from(Object.values(category.val()));
       setCategories(category);
@@ -205,6 +230,18 @@ export const FormPago = ({setData, data}: IFormPago) => {
         }
       />
       <KyonMasterInput
+        type={'select'}
+        label={'fecha'}
+        value={data.date}
+        placeholder={'Fecha'}
+        onChangeText={value =>
+          setData((prev: IGasto) => ({
+            ...prev,
+            date: value,
+          }))
+        }
+      />
+      <KyonMasterInput
         type={'modal'}
         label={'tipo'}
         value={data.type}
@@ -255,7 +292,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
           }))
         }
       />
-      <KyonMasterButton disabled={isDisabled} title={'PAGAR'} onPress={() => savePayment()} />
+      <KyonMasterButton disabled={isDisabled} title={'PAGAR'} onPress={() => data.id ? editPayment() : savePayment()} />
       <KyonMasterText textStyle={{color: '#d71c1c',fontSize: 40}} text={isPaid ? 'PAGADO' : ''} />
       <KyonMasterModal
         headerTitle={'Agregar nuevo metodo de pago'}

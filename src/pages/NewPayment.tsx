@@ -22,6 +22,7 @@ export const NewPayment = () => {
 
   return (
     <KyonMasterView variant={'background'}>
+      <KyonMasterText variant={'h1'} text={'Nuevo Pago'}/>
       <FormPago setData={setData} data={data} />
     </KyonMasterView>
   );

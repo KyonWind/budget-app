@@ -5,6 +5,7 @@ export const formInitialState = {
   url: '',
   paymentMethod: '',
   category: '',
+  date: new Date().toLocaleDateString('en-GB')
 };
 
 export const usdApiValue = {

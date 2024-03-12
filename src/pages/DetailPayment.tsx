@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
 import { KyonMasterText } from "../KyonToolBox/components";
+import { formInitialState } from "../const";
+import { FormPago } from "../components/FormPago.tsx";
 
 export interface IData {
   type: string;
@@ -11,21 +13,12 @@ export interface IData {
   category: string;
 }
 export const DetailPayment = ({route}: any) => {
-
-  useEffect(() => {
-  }, []);
-
+  const [data, setData] = useState<IData>(route.params);
+console.log('%cDetailPayment:DetailPayment','color:yellow',data);
   return (
-    <KyonMasterView alignItems={'flex-start'} justifyContent={'flex-start'} variant={'background'}>
-      {Object.keys(route.params).map(key => {
-        return (
-          <KyonMasterView key={key} flexDirection={'row'} wrapperStyle={{width:'100%'}}>
-            <KyonMasterText text={`${key.toUpperCase()}: `} textStyle={{fontWeight:'bold', fontSize:20}}/>
-            <KyonMasterText text={route.params[key]} textStyle={{fontSize:15}}/>
-          </KyonMasterView>
-        )
-      })
-      }
+    <KyonMasterView variant={'background'}>
+      <KyonMasterText variant={'h1'} text={'Editar Pago'}/>
+      <FormPago setData={setData} data={data} />
     </KyonMasterView>
   );
 };

@@ -1,9 +1,7 @@
 import database from "@react-native-firebase/database";
 import { useKyonAsyncStorageListener } from "../../../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { set } from "@react-native-firebase/database/lib/modular/query";
+import { Dispatch, SetStateAction } from "react";
 import { useKyonRouterContext } from "../../KyonRouterContext.tsx";
-import { useBudgetFirebase } from "../BudgetFireBaseContext.tsx";
 
 
 interface IProfile {
