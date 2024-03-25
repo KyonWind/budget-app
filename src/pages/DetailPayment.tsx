@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { IData } from "@root/interfaces";
+import { IData } from "@interface/IData.ts";
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
-import { FormPago } from "@root/components";
+import { FormPago } from "@components/FormPago.tsx";
 
 
 export const DetailPayment = ({route}: any) => {

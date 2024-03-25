@@ -1,8 +1,8 @@
-import { useBudgetProfileContext } from "@root/context";
+import { useBudgetProfileContext } from "@context/BudgetProfileContext";
 import { useState } from "react";
 import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
-import { FireBaseService } from "@root/services";
-import { IGasto } from "@root/pages";
+import { FireBaseService } from "@service/firebaseService";
+import { IGasto } from "@pages/Home.tsx";
 
 
 export const useGetPayments = () => {

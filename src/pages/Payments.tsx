@@ -1,8 +1,8 @@
 
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetPaymentContext } from "@root/context";
+import { useBudgetPaymentContext } from "@context/BudgetPaymentContext";
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
-import { SearchFilters } from "@root/components";
+import { SearchFilters } from "@components/SearchFilters.tsx";
 import { Animated, Pressable } from "react-native";
 import ScrollView = Animated.ScrollView;
 import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";

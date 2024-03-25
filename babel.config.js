@@ -6,8 +6,8 @@ module.exports = {
       {
         cwd: 'babelrc',
         extensions: ['.ts', '.tsx', '.js', '.ios.js', '.android.js'],
+        root: ['./src'],
         alias: {
-         // '@root': './src', // replace '@youralias' and './src' with your own alias and directory
           '@assets': './src/assets', // replace '@youralias' and './src' with your own alias and directory
           '@interface': './src/interfaces', // replace '@youralias' and './src' with your own alias and directory
           '@context': './src/context', // replace '@youralias' and './src' with your own alias and directory

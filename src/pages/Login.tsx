@@ -1,9 +1,7 @@
-import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
-import { ScrollView, View } from "react-native";
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
-import { useBudgetFirebase } from "../context/BudgetFireBaseContext";
-import { KyonMasterText } from "../KyonToolBox/components";
+import { useKyonGoogleLogin } from "@kyon/hooks";
+import { useBudgetFirebase } from "@context/BudgetFireBaseContext";
+import { KyonMasterButton, KyonMasterView } from "@kyon/components";
+
 
 export const Login = () => {
 

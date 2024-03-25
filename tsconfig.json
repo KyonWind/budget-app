@@ -1,18 +1,17 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@root/*": ["./src/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@interface/*": ["./src/interfaces/*"],
-      "@context/*": ["./src/context/*"],
-      "@theme/*": ["./src/theme/*"],
-      "@kyon/*": ["./src/KyonToolBox/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@service/*": ["./src/services/*"],
-      "@const/*": ["./src/const/*"],
-      "@components/*": ["./src/components/*"],
+      "@assets/*": ["assets/*"],
+      "@interface/*": ["interfaces/*"],
+      "@context/*": ["context/*"],
+      "@theme/*": ["theme/*"],
+      "@kyon/*": ["KyonToolBox/*"],
+      "@pages/*": ["pages/*"],
+      "@service/*": ["services/*"],
+      "@const/*": ["const/*"],
+      "@components/*": ["components/*"],
     }
     // other options...
   },

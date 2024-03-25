@@ -1,5 +1,9 @@
-import { IKyonRoutes } from "@root/interfaces";
-import { Cards, DetailPayment, Home, NewPayment, Payments } from "@root/pages";
+import { IKyonRoutes } from "@interface/IKyonRoutes.ts";
+import { Home } from "@pages/Home.tsx";
+import { NewPayment } from "@pages/NewPayment.tsx";
+import { DetailPayment } from "@pages/DetailPayment.tsx";
+import { Payments } from "@pages/Payments.tsx";
+import { Cards } from "@pages/Cards.tsx";
 
 
 export const PrivateRoutes = ():IKyonRoutes => ({

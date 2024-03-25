@@ -1,8 +1,11 @@
-import React, {FC, ReactNode, createContext, useContext, useMemo} from 'react';
-import type {IKyonMasterTextStyle} from '../interfaces';
-import type {IKyonMasterInputStyle} from '../interfaces';
-import { IKyonMasterViewStyle } from "../interfaces/IKyonMasterViewStyle.ts";
-import { IKyonMasterButtonStyle } from "../interfaces/IKyonMasterButtonStyle.ts";
+import {
+  IKyonMasterButtonStyle,
+  IKyonMasterInputStyle,
+  IKyonMasterTextStyle,
+  IKyonMasterViewStyle
+} from "@interfaces";
+import { createContext, FC, ReactNode, useContext, useMemo } from "react";
+
 
 export interface ThemeContextValue {
   theme?: {

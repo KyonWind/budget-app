@@ -1,6 +1,7 @@
-import { useKyonGoogleLogin } from "../KyonToolBox/hooks/useKyonGoogleLogin.tsx";
-import { View } from "react-native";
-import { KyonMasterText } from "../KyonToolBox/components";
+import { Animated } from "react-native";
+import View = Animated.View;
+import { KyonMasterText } from "@kyon/components";
+
 
 export const Loading = () => {
 

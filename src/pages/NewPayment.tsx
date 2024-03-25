@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { IData } from "@root/interfaces";
-import { formInitialState } from "@root/const";
+import { IData } from "@interface/IData.ts";
+import { formInitialState } from "@const/initialStates.ts";
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
-import { FormPago } from "@root/components";
+import { FormPago } from "@components/FormPago.tsx";
 
 
 export const NewPayment = () => {

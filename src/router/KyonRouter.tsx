@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useKyonRouterContext } from "../context/KyonRouterContext.tsx";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { profiles } from "./profiles/profiles.ts";
 import { Loading } from "../pages/Loading.tsx";
 import { FooterMenu } from "../components/FooterMenu.tsx";

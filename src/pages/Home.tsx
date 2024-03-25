@@ -1,9 +1,10 @@
-import { KyonMasterButton, KyonMasterText, KyonMasterView } from "@kyon/components";
-import { useNavigation } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Switch } from "react-native";
-import { useBudgetApiDolarContext, useBudgetProfileContext } from "@root/context";
-import { FireBaseService } from "@root/services";
+import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext";
+import { useBudgetProfileContext } from "@context/BudgetProfileContext";
+import { FireBaseService } from "@service/firebaseService";
+import { KyonMasterButton, KyonMasterText, KyonMasterView } from "@kyon/components";
 
 
 export interface IGasto {
