@@ -1,4 +1,5 @@
-import { IKyonMasterViewStyle } from "../interfaces/IKyonMasterViewStyle.ts";
+import { IKyonMasterViewStyle } from "@root/interfaces";
+
 
 export const KyonMasterView: IKyonMasterViewStyle = {
   defaultProps: {

@@ -1,9 +1,9 @@
-import database from "@react-native-firebase/database";
-import { IGasto } from "../../../pages/Home.tsx";
-import { useBudgetProfileContext } from "../../BudgetProfileContext/BudgetProfileContext.tsx";
+import { useBudgetProfileContext } from "@root/context";
 import { useState } from "react";
-import { IPayment } from "../BudgetPaymentInterfaces.ts";
-import { FireBaseService } from "../../../services/firebaseService/FirebaseService.ts";
+import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import { FireBaseService } from "@root/services";
+import { IGasto } from "@root/pages";
+
 
 export const useGetPayments = () => {
   const { profile } = useBudgetProfileContext();

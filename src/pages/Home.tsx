@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Switch } from "react-native";
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterText } from "../KyonToolBox/components";
-import database from "@react-native-firebase/database";
-import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
-import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
+import { KyonMasterButton, KyonMasterText, KyonMasterView } from "@kyon/components";
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
-import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
-import { FireBaseService } from "../services/firebaseService/FirebaseService.ts";
+import { useEffect, useRef, useState } from "react";
+import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Switch } from "react-native";
+import { useBudgetApiDolarContext, useBudgetProfileContext } from "@root/context";
+import { FireBaseService } from "@root/services";
+
 
 export interface IGasto {
   name?: string;

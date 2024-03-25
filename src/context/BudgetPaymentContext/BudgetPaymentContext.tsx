@@ -3,12 +3,12 @@ import { useGetPayments } from "./hooks/useGetPayments.tsx";
 import { IPayment } from "./BudgetPaymentInterfaces.ts";
 
 export interface BudgetPaymentContextValue {
-    getPayments: () => string;
-    payments: IPayment[]|undefined;
+    getPayments: () => Promise<string>;
+    payments?: IPayment[];
 }
 
 export const BudgetPaymentContext = createContext<BudgetPaymentContextValue>({
-    getPayments: () => ' ',
+    getPayments: () => Promise.resolve(''),
     payments: undefined
 });
 

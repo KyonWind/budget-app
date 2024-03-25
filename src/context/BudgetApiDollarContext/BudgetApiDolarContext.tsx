@@ -2,19 +2,12 @@ import React, { FC, ReactNode, createContext, useContext, useMemo, useState, use
 import { usdApiValue } from "../../const";
 
 export interface BudgetApiDolarContextValue {
-  getDollars: () => {
-    casa: string;
-    compra: number;
-    fechaActualizacion: string;
-    moneda: string;
-    nombre: string;
-    venta: number;
-  },
+  getQuotation: () => void;
   quotation: number
 }
 
 export const BudgetApiDolarContext = createContext<BudgetApiDolarContextValue>({
-  getDollars: () => usdApiValue,
+  getQuotation: () => usdApiValue,
   quotation: 0
 });
 
@@ -28,9 +21,8 @@ export const BudgetApiDolarContextProvider: FC<BudgetApiDolarContextProvider> = 
       const response = await fetch("https://dolarapi.com/v1/dolares/blue");
       const data = await response.json();
       setQuotation(data.venta)
-      return
-
     } catch (e) {
+      console.log('%cBudgetApiDolarContext:getQuotation','color:yellow',e);
     }
   }
 

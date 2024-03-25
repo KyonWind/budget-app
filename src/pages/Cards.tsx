@@ -1,5 +1,5 @@
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterText } from "../KyonToolBox/components";
+import { KyonMasterText, KyonMasterView } from "@kyon/components";
+
 
 export const Cards = () => {
 

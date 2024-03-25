@@ -25,4 +25,5 @@ export interface IKyonMasterInput extends TextInputProps {
   options?: any[];
   footerOptions?: any[];
   headerOptions?: any[];
+  rightIcon?: string;
 }

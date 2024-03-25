@@ -1,22 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
-import {FormPago} from '../components/FormPago.tsx';
-import {formInitialState} from '../const';
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterText } from "../KyonToolBox/components";
-import { useBudgetFirebase } from "../context/BudgetFireBaseContext";
-import database from "@react-native-firebase/database";
-import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
-import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
+import { useState } from "react";
+import { IData } from "@root/interfaces";
+import { formInitialState } from "@root/const";
+import { KyonMasterText, KyonMasterView } from "@kyon/components";
+import { FormPago } from "@root/components";
 
-export interface IData {
-  type: string;
-  description: string;
-  cost: string;
-  url: string;
-  paymentMethod: string;
-  category: string;
-}
+
 export const NewPayment = () => {
   const [data, setData] = useState<IData>(formInitialState);
 

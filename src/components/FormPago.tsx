@@ -15,7 +15,7 @@ import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncSt
 import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
 import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetApiDolarContext } from "../context/BudgetFireBaseContext/BudgetApiDolarContext.tsx";
+import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext/BudgetApiDolarContext.tsx";
 import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
 import { FireBaseService } from "../services/firebaseService/FirebaseService.ts";
 
@@ -114,7 +114,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
   },[data]);
 
   const editPayment = useCallback( async () => {
-    FireBaseService.put('gastos', data?.id, {
+    data.id && FireBaseService.put('gastos', data?.id, {
       name: data.name,
       type: data.type,
       description: data.description,

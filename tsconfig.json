@@ -1,3 +1,20 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@root/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@interface/*": ["./src/interfaces/*"],
+      "@context/*": ["./src/context/*"],
+      "@theme/*": ["./src/theme/*"],
+      "@kyon/*": ["./src/KyonToolBox/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@service/*": ["./src/services/*"],
+      "@const/*": ["./src/const/*"],
+      "@components/*": ["./src/components/*"],
+    }
+    // other options...
+  },
+  // other options...
 }

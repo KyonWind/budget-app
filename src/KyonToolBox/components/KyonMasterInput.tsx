@@ -1,21 +1,17 @@
 import {
-  Alert,
   Animated,
-  Button,
-  Easing,
-  Modal, Pressable,
-  ScrollView,
+  Easing, Pressable,
   TextInput,
   View,
   ViewStyle
 } from "react-native";
 import React, {useEffect, useRef, useState} from 'react';
 import {useThemeContext} from '../../context';
-import type { IKyonMasterInput, IKyonMasterTextStyle } from "../../interfaces";
+import type { IKyonMasterInput } from "../../interfaces";
 import {KyonMasterText} from './KyonMasterText.tsx';
 import type {IKyonMasterText} from '../../interfaces';
-import { KyonMasterView } from "./KyonMasterView.tsx";
 import { KyonMasterModal } from "./KyonMasterModal.tsx";
+import Image = Animated.Image;
 
 export const KyonMasterInput = ({
   debug = false,
@@ -36,12 +32,17 @@ export const KyonMasterInput = ({
   options,
   footerOptions,
   headerOptions,
+  rightIcon
 }: IKyonMasterInput) => {
   const {theme} = useThemeContext();
   const LabelAnimated = useRef(new Animated.Value(25)).current;
   const LabelOpacityAnimated = useRef(new Animated.Value(0)).current;
   const [internalValue, setInternalValue] = useState(value);
   const [openModal, setOpenModal] = useState<boolean>(false);
+ // const image = (rightIcon?.includes('http') ||
+ // rightIcon?.includes('https')) ?  rightIcon : require(rightIcon as string);
+//
+ // console.log('%cKyonMasterInput:KyonMasterInput','color:yellow',image);
   const onFocus = () => {
     // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(LabelAnimated, {
@@ -186,14 +187,18 @@ export const KyonMasterInput = ({
             text={label}
           />
         )}
-        { type !== 'modal' ? <TextInput
+        { type !== 'modal' ? <View style={{
+            flexDirection: 'row',
+          }}>
+          <TextInput
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
           value={value}
           keyboardType={keyboardType}
           inputMode={inputMode}
           onChangeText={val => {
-            onChangeText(val), setInternalValue(val);
+            onChangeText(val),
+              setInternalValue(val);
           }}
           placeholderTextColor={
             //@ts-ignore
@@ -201,14 +206,30 @@ export const KyonMasterInput = ({
           }
           selectionColor={selectionColor}
           placeholder={placeholder}
-          style={INPUT_STYLE}
-        /> :
+          style={{ ...INPUT_STYLE, flex:1 }}
+        />
+          <Pressable onPress={()=> console.log('%cKyonMasterInput:','color:yellow','pressed')}>
+            <Image
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                right: 10,
+                top: 12}}
+             // source={{ uri:'https://reactnative.dev/img/tiny_logo.png' }}
+              source={rightIcon}
+            />
+          </Pressable>
+          </View>
+          :
          <Pressable style={VIEW_STYLE} onPressIn={onPressIn}>
           <TextInput
             value={value}
             editable={false}
             keyboardType={keyboardType}
             inputMode={inputMode}
+            inlineImageLeft={'hola'}
+            inlineImagePadding={30}
             placeholderTextColor={
               //@ts-ignore
               themeBasicConfig.placeholderTextColor ?? placeholderTextColor

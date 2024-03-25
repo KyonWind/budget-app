@@ -1,7 +1,6 @@
-import { KyonMasterView } from "../KyonToolBox/components/KyonMasterView.tsx";
-import { KyonMasterText } from "../KyonToolBox/components";
-import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { KyonMasterText, KyonMasterView } from "@kyon/components";
+import { Pressable } from "react-native";
 
 
 export const FooterMenu = () => {
