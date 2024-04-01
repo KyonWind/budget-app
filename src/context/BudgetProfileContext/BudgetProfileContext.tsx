@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, createContext, useContext, useMemo, useEffect, useState } from "react";
 import { useKyonAsyncStorageListener } from "../../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
 import { profileInitialState } from "../../const";
+import { FireBaseService } from "@service/firebaseService";
 
 export interface BudgetProfileContextValue {
   profile: IProfile;
@@ -27,6 +28,7 @@ export const BudgetProfileContextProvider: FC<BudgetProfileContextProvider> = ({
   const getProfile = async () => {
     let profile: IProfile = JSON.parse(await getItem('profile') as string);
     setProfile(profile);
+    FireBaseService.profile = profile;
   }
 
   useEffect(() => {

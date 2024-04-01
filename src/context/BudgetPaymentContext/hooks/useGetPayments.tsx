@@ -11,18 +11,12 @@ export const useGetPayments = () => {
 
   const getPayments = async ():Promise<string> => {
     try {
-      //let expenses = await database().ref(`/gastos`).once('value');
       let expenses = await FireBaseService.get('gastos');
-      const ExpensesMap = new Map<string, IPayment>();
-      Object.keys(expenses.val()).forEach(id => {
-        const r =  expenses.val()[id];
-        r.id = id
-        ExpensesMap.set(id, r);
-      })
-      let ArrayExpenses = Array.from(ExpensesMap.values()).filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
-      // @ts-ignore
-      ArrayExpenses = ArrayExpenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
-      setPayments(ArrayExpenses);
+      if (typeof expenses !== "string") {
+        // @ts-ignore
+        setPayments(() => expenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'))
+          .filter(expense => !(expense.name !== profile.name && expense.category === "Personal")))
+      }
       return 'getted';
     } catch (e: any) {
       console.log('getPaymentTypes:',e);

@@ -1,69 +1,32 @@
-import { KyonMasterInput, KyonMasterText } from "../KyonToolBox/components";
-import { Linking, View } from "react-native";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import {IAppLinks} from '../../App.tsx';
-import {IGasto} from '../pages/Home.tsx';
-import database from '@react-native-firebase/database';
-import {formInitialState} from '../const';
-import { useKyonAsyncStorageListener } from "../KyonToolBox/hooks/useKyonAsyncStorageListener.tsx";
-import { KyonMasterModal } from "../KyonToolBox/components/KyonMasterModal.tsx";
-import { KyonMasterButton } from "../KyonToolBox/components/KyonMasterButton.tsx";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { IGasto } from "@pages/Home.tsx";
+import { IAppLinks } from "../../App.tsx";
+import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext";
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext/BudgetApiDolarContext.tsx";
-import { useBudgetProfileContext } from "../context/BudgetProfileContext/BudgetProfileContext.tsx";
-import { FireBaseService } from "../services/firebaseService/FirebaseService.ts";
+import { useBudgetProfileContext } from "@context/BudgetProfileContext";
+import { formInitialState } from "@const/initialStates.ts";
+import { FireBaseService } from "@service/firebaseService";
+import { Linking, Switch, View } from "react-native";
+import { KyonMasterButton, KyonMasterInput, KyonMasterModal, KyonMasterText, KyonMasterView } from "@kyon/components";
+
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
   data: IGasto;
 }
 
-const appsLinks: IAppLinks[] = [
-  {
-    name: 'Mercado Pago',
-    url: 'market://details?id=com.mercadopago.wallet',
-  },
-  {
-    name: 'MercadoLibre',
-    url: 'market://details?id=com.mercadolibre',
-  },
-  {
-    name: 'Galicia',
-    url: 'market://details?id=com.mosync.app_Banco_Galicia',
-  },
-  {
-    name: 'BBVA',
-    url: 'market://details?id=com.bbva.nxt_argentina',
-  },
-  {
-    name: 'HSBC',
-    url: 'market://details?id=ar.com.hsbc.hsbcargentina',
-  },
-  {
-    name: 'Tarjeta',
-    url: '',
-  },
-  {
-    name: 'Modo',
-    url: '',
-  },
-];
 
 export const FormPago = ({setData, data}: IFormPago) => {
   const [isPaid, setIsPaid] = useState(false);
-  const [paymentTypes, setPaymentTypes] = useState([]);
+  const [paymentTypes, setPaymentTypes] = useState<any[]>([]);
+  const [installments, setInstallments] = useState<any[]>([]);
+  const [paymentIntermediaries, setPaymentIntermediaries] = useState<IAppLinks[]>([]);
   const [categories, setCategories] = useState<any>();
   const [newPayment, setNewPayment] = useState('');
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [isDisabled, setIsDisable] = useState<boolean>(true);
+  const [isInstallments, setIsInstallments] = useState<boolean>(false);
   const {quotation } = useBudgetApiDolarContext();
-  const {getItem} = useKyonAsyncStorageListener();
   const navigation = useNavigation();
   const { profile } = useBudgetProfileContext();
 
@@ -124,56 +87,42 @@ export const FormPago = ({setData, data}: IFormPago) => {
       category: data.category,
       date: data.date,
     });
-    console.log('%cFormPago:','color:yellow', data.url !== undefined);
     if (data.url !== undefined && data.url !== '') {
       Linking.openURL(data.url).catch(err => console.log('App:e', err));
     } else {
       setIsPaid(true);
     }
     setIsPaid(true);
-    console.log('%cFormPago:','color:yellow','backhome');
     navigation.navigate('payment' as never);
   },[data]);
 
   const getPaymentTypes = useCallback( async () => {
-    try {
-      await database().ref(`/users/${profile?.user}/paymentMethods`).once('value')
-        .then(snapshot => {
-          setPaymentTypes(Array.from(Object.values(snapshot.val())))
-        });
-    } catch (e) {
-      console.log('getPaymentTypes:',e);
-    }
-
+      setPaymentTypes(await FireBaseService.getPaymentsMethods() as any[])
   },[paymentTypes])
 
   const getCategory = useCallback( async () => {
-    let profile = await getItem('profile');
-    //@ts-ignore
-    profile = JSON.parse(profile);
-    try {
-      // @ts-ignore
-      let category = await FireBaseService.get('Category');
-      // @ts-ignore
-      category = Array.from(Object.values(category.val()));
-      setCategories(category);
-    } catch (e) {
-      console.log('getPaymentTypes:',e);
-    }
+      setCategories(await FireBaseService.get('Category'));
   },[categories,setCategories])
+
+  const getInstallments = useCallback( async () => {
+    setInstallments(await FireBaseService.get('installments') as any);
+  },[installments,setIsInstallments])
+
+  const getPaymentIntermediaries = useCallback(
+    async () => {
+       setPaymentIntermediaries(await FireBaseService.get("paymentIntermediary") as IAppLinks []);
+    },[setPaymentIntermediaries])
 
   useEffect(() => {
     getPaymentTypes();
     getCategory();
+    getPaymentIntermediaries();
+    getInstallments();
   }, []);
 
   const addPaymentTypes = useCallback( async () => {
     try {
-       database()
-        .ref(`users/${profile?.user}/paymentMethods`)
-        .push({
-          name: newPayment,
-        });
+       FireBaseService.addPaymentsMethods(newPayment);
       setNewPayment('');
       setOpenPaymentModal(false);
       await getPaymentTypes()
@@ -183,8 +132,19 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
   },[newPayment])
 
+  const prepareInstallment = (installmentCuantity) => {
+    console.log('%cFormPago:prepareInstallment','color:yellow',installmentCuantity);
+    const array =  Array(+installmentCuantity);
+    console.log('%cFormPago:prepareInstallment','color:yellow',array);
+  }
+
   return (
     <View>
+      <KyonMasterView flexDirection={'row'}>
+        <KyonMasterText text={'un pago'}/>
+      <Switch trackColor={{false: '#767577', true: '#81b0ff'}} thumbColor={isInstallments ? '#f5dd4b' : '#f4f3f4'} value={isInstallments} onChange={()=> setIsInstallments((prev) => !prev)}/>
+        <KyonMasterText text={'pago en cuotas'}/>
+      </KyonMasterView>
       <KyonMasterInput
         type={'select'}
         placeholder={'importe'}
@@ -241,6 +201,33 @@ export const FormPago = ({setData, data}: IFormPago) => {
           }))
         }
       />
+      {isInstallments && <KyonMasterInput
+        type={'modal'}
+        label={'cuotas'}
+        value={installments[data.installments]}
+        placeholder={'cantidad de cuotas'}
+        options={installments?.map((app, index) => {
+          return (
+            <View key={index} style={{marginTop: 20}}>
+              <KyonMasterButton
+                title={app.description}
+                onPress={() =>
+                  setData((prev: IGasto) => ({
+                    ...prev,
+                    installments: prepareInstallment(app.id),
+                  }))
+                }
+              />
+            </View>
+          );
+        })}
+        onChangeText={value =>
+          setData((prev: IGasto) => ({
+            ...prev,
+            installments: value,
+          }))
+        }
+      />}
       <KyonMasterInput
         type={'modal'}
         label={'tipo'}
@@ -269,7 +256,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         label={'metodo de pago'}
         placeholder={'metodo'}
         value={data.paymentMethod}
-        options={appsLinks.map((app, index) => {
+        options={paymentIntermediaries?.map((app, index) => {
           return (
             <View key={index} style={{marginTop: 20}}>
               <KyonMasterButton

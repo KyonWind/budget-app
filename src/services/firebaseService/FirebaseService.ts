@@ -1,24 +1,53 @@
 import database, { FirebaseDatabaseTypes } from "@react-native-firebase/database";
 import { DataSnapshot, DatabaseReference } from "@react-native-firebase/database/lib/modular/query";
+import { IProfile, useBudgetProfileContext } from "@context/BudgetProfileContext";
+import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
 
 class FirebaseService {
+  private PROFILE?: IProfile
   constructor() {
   }
 
-  async get(item: string): Promise<DataSnapshot> {
-    return await database().ref(`/${item}`).once('value');
+  async get(item: string): Promise<any[]| string> {
+
+    const map = new Map<string, any>();
+
+    try {
+      const snapshot = await database().ref(`/${item}`).once('value');
+      Object.keys(snapshot.val()).forEach(id => {
+        const r =  snapshot.val()[id];
+        r.id = id
+        map.set(id, r);
+      })
+      return Array.from(map.values())
+    } catch (e) {
+      console.log('%cFirebaseService:get','color:yellow',e);
+      return 'error'
+    }
   }
 
   async getById(item: string, id: string): Promise<DataSnapshot> {
     return await database().ref(`/${item}/${id}`).once('value');
   }
 
-  async getPaymentsMethods(user: string): Promise<DataSnapshot> {
-    return await database().ref(`/users/${user}/paymentMethods`).once('value')
+  async getPaymentsMethods(): Promise<any[]| string> {
+    try {
+      const snapshot = await database().ref(`/users/${this.PROFILE?.user}/paymentMethods`).once('value');
+      return Array.from(Object.values(snapshot.val()))
+    } catch (e) {
+      console.log('%cFirebaseService:getPaymentsMethods','color:yellow',e);
+      return 'error'
+
+    }
+
   }
 
-  async addPaymentsMethods(item: string, id: string): Promise<DataSnapshot> {
-    return await database().ref(`/${item}/${id}`).once('value');
+  addPaymentsMethods(item: string): void {
+     database()
+      .ref(`/users/${this.PROFILE?.user}/paymentMethods`)
+      .push({
+        name: item,
+      });
   }
 
    post(item: string, value: {}): DatabaseReference {
@@ -29,8 +58,8 @@ class FirebaseService {
     return await database().ref(`/${item}/${id}`).update(value);
   }
 
-  getAll(){
-
+  set profile(profile: IProfile) {
+    this.PROFILE = profile;
   }
 }
 

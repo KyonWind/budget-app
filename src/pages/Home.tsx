@@ -17,6 +17,7 @@ export interface IGasto {
   url: string;
   paymentMethod?: string;
   date?: string;
+  installments?: string;
   id?: string;
 }
 export const Home = () => {
@@ -39,14 +40,13 @@ export const Home = () => {
 
   const getPayments = async () => {
     try {
-      // let expenses = await database().ref(`/gastos`).once('value');
       let expenses = await FireBaseService.get('gastos');
-      let ArrayExpenses: any[] = Array.from(Object.values(expenses.val()));
-      ArrayExpenses = ArrayExpenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
+      if(typeof expenses === 'string') throw new Error('error');
+      expenses = expenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
       // @ts-ignore
-      ArrayExpenses = ArrayExpenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
-      sortCostByCategory(ArrayExpenses);
-      setLastPayments(ArrayExpenses);
+      expenses = expenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
+      sortCostByCategory(expenses);
+      setLastPayments(expenses);
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }
