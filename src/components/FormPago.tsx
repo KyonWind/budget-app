@@ -6,8 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useBudgetProfileContext } from "@context/BudgetProfileContext";
 import { formInitialState } from "@const/initialStates.ts";
 import { FireBaseService } from "@service/firebaseService";
-import { Linking, Switch, View } from "react-native";
+import { Linking, ScrollView, Switch, View } from "react-native";
 import { KyonMasterButton, KyonMasterInput, KyonMasterModal, KyonMasterText, KyonMasterView } from "@kyon/components";
+import { DateFormat } from "../utils/dateformat.ts";
 
 
 interface IFormPago {
@@ -29,6 +30,12 @@ export const FormPago = ({setData, data}: IFormPago) => {
   const {quotation } = useBudgetApiDolarContext();
   const navigation = useNavigation();
   const { profile } = useBudgetProfileContext();
+
+
+  console.log(
+    DateFormat.addMonth(data.date, 1)
+  // @ts-ignore
+)
 
   const validate = useCallback(() => {
     for (let item of Object.values(data)) {
@@ -57,16 +64,19 @@ export const FormPago = ({setData, data}: IFormPago) => {
   }, [isPaid]);
 
   const savePayment = useCallback( async () => {
-    const response =  FireBaseService.post('gastos',{
+  for(let i = 0; i < data?.installments; i++) {
+    FireBaseService.post('gastos',{
       name: profile.name,
       type: data.type,
       description: data.description,
-      cost: data.cost,
+      cost: +data.cost /data.installments,
       quotationUSD: quotation,
       paymentMethod: data.paymentMethod,
       category: data.category,
-      date: data.date,
+      date: DateFormat.addMonth(data.date, i-1),
+      isInstallments: isInstallments,
     });
+  }
     if (data.url !== '') {
       Linking.openURL(data.url).catch(err => console.log('App:e', err));
     } else {
@@ -134,12 +144,13 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
   const prepareInstallment = (installmentCuantity) => {
     console.log('%cFormPago:prepareInstallment','color:yellow',installmentCuantity);
-    const array =  Array(+installmentCuantity);
-    console.log('%cFormPago:prepareInstallment','color:yellow',array);
+    return installmentCuantity
   }
 
+  console.log('%cFormPago:installments','color:yellow',installments);
+
   return (
-    <View>
+    <ScrollView>
       <KyonMasterView flexDirection={'row'}>
         <KyonMasterText text={'un pago'}/>
       <Switch trackColor={{false: '#767577', true: '#81b0ff'}} thumbColor={isInstallments ? '#f5dd4b' : '#f4f3f4'} value={isInstallments} onChange={()=> setIsInstallments((prev) => !prev)}/>
@@ -168,7 +179,6 @@ export const FormPago = ({setData, data}: IFormPago) => {
             ...prev,
             category: value,
           }))
-
         }
         options={categories?.map((category: string, index: number) => {
           return <KyonMasterButton key={index} title={category} onPress={()=> setData((prev: IGasto) => ({
@@ -204,22 +214,22 @@ export const FormPago = ({setData, data}: IFormPago) => {
       {isInstallments && <KyonMasterInput
         type={'modal'}
         label={'cuotas'}
-        value={installments[data.installments]}
+        value={data.installments}
         placeholder={'cantidad de cuotas'}
         options={installments?.map((app, index) => {
-          return (
-            <View key={index} style={{marginTop: 20}}>
+          return <View key={index} style={{marginTop: 20}}>
               <KyonMasterButton
                 title={app.description}
-                onPress={() =>
+                onPress={() => {
+                  console.log('%cFormPago:press','color:yellow');
                   setData((prev: IGasto) => ({
                     ...prev,
-                    installments: prepareInstallment(app.id),
-                  }))
+                    installments: prepareInstallment(app.id)
+                  }));
+                }
                 }
               />
-            </View>
-          );
+              </View>
         })}
         onChangeText={value =>
           setData((prev: IGasto) => ({
@@ -304,6 +314,6 @@ export const FormPago = ({setData, data}: IFormPago) => {
             }
           />
         ]}/>
-    </View>
+    </ScrollView>
   );
 };

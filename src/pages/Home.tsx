@@ -5,6 +5,7 @@ import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext";
 import { useBudgetProfileContext } from "@context/BudgetProfileContext";
 import { FireBaseService } from "@service/firebaseService";
 import { KyonMasterButton, KyonMasterText, KyonMasterView } from "@kyon/components";
+import { DateFormat } from "../utils/dateformat.ts";
 
 
 export interface IGasto {
@@ -17,7 +18,7 @@ export interface IGasto {
   url: string;
   paymentMethod?: string;
   date?: string;
-  installments?: string;
+  installments: number;
   id?: string;
 }
 export const Home = () => {
@@ -44,7 +45,8 @@ export const Home = () => {
       if(typeof expenses === 'string') throw new Error('error');
       expenses = expenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
       // @ts-ignore
-      expenses = expenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'));
+      expenses = expenses.sort((a: any,b: any) => DateFormat.getDate(a.date).getTime() + DateFormat.getDate(b.date).getTime());
+      console.log('%cHome:','color:yellow', JSON.stringify(expenses, null, 2));
       sortCostByCategory(expenses);
       setLastPayments(expenses);
     } catch (e) {
@@ -70,7 +72,7 @@ export const Home = () => {
         acc += +obj
       return acc
     });
-    setTotal(total.toLocaleString('de-DE', {maximumFractionDigits: 2 }));
+    setTotal(total.toLocaleString('en-GB', {maximumFractionDigits: 2 }));
   }
 
 

@@ -1,6 +1,7 @@
 import type {TextInputProps, ViewStyle} from 'react-native';
 import type {IKyonMasterText} from './IKyonMasterText';
 
+// @ts-ignore
 export interface IKyonMasterInput extends TextInputProps {
   inputStyle?: TextInputProps;
   wrapperStyle?: ViewStyle;
@@ -15,7 +16,7 @@ export interface IKyonMasterInput extends TextInputProps {
     | 'numeric'
     | 'email-address'
     | 'phone-pad';
-  value?: string;
+  value?: string | number;
   label: string;
   noLabel?: boolean;
   variant?: string;

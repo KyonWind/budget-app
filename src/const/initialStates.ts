@@ -1,3 +1,5 @@
+import { DateFormat } from "../utils/dateformat.ts";
+
 export const formInitialState = {
   type: '',
   description: '',
@@ -5,7 +7,8 @@ export const formInitialState = {
   url: '',
   paymentMethod: '',
   category: '',
-  date: new Date().toLocaleDateString('en-GB')
+  installments: 1,
+  date: DateFormat.formatDate(new Date)
 };
 
 export const usdApiValue = {
