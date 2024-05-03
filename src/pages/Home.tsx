@@ -45,10 +45,11 @@ export const Home = () => {
       if(typeof expenses === 'string') throw new Error('error');
       expenses = expenses.filter(expense => !(expense.name !== profile.name && expense.category === 'Personal') )
       // @ts-ignore
-      expenses = expenses.sort((a: any,b: any) => DateFormat.getDate(a.date).getTime() + DateFormat.getDate(b.date).getTime());
-      console.log('%cHome:','color:yellow', JSON.stringify(expenses, null, 2));
+      expenses = expenses.sort((a: any,b: any) => {
+        return (DateFormat.getDate(a.date).getTime()) - (DateFormat.getDate(b.date).getTime());
+      });
       sortCostByCategory(expenses);
-      setLastPayments(expenses);
+      setLastPayments(expenses.reverse());
     } catch (e) {
       console.log('getPaymentTypes:',e);
     }

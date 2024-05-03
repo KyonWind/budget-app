@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
 import { FireBaseService } from "@service/firebaseService";
 import { IGasto } from "@pages/Home.tsx";
+import { DateFormat } from "../../../utils/dateformat.ts";
 
 
 export const useGetPayments = () => {
@@ -14,8 +15,9 @@ export const useGetPayments = () => {
       let expenses = await FireBaseService.get('gastos');
       if (typeof expenses !== "string") {
         // @ts-ignore
-        setPayments(() => expenses.sort((a: any,b: any) => new Date(a.date).toLocaleDateString('en-GB') + new Date(b.date).toLocaleDateString('en-GB'))
-          .filter(expense => !(expense.name !== profile.name && expense.category === "Personal")))
+        setPayments(() => expenses.sort((a: any,b: any) =>
+          DateFormat.getDate(a.date).getTime() - DateFormat.getDate(b.date).getTime())
+          .filter(expense => !(expense.name !== profile.name && expense.category === "Personal")).reverse())
       }
       return 'getted';
     } catch (e: any) {
