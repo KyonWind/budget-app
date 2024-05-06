@@ -1,22 +1,36 @@
-import React, { FC, ReactNode, createContext, useContext, useMemo, useState, useEffect } from "react";
+import React, {
+    FC,
+    ReactNode,
+    createContext,
+    useContext,
+    useMemo,
+    useState,
+    useEffect,
+    Dispatch,
+    SetStateAction
+} from "react";
 import { useGetPayments } from "./hooks/useGetPayments.tsx";
-import { IPayment } from "./BudgetPaymentInterfaces.ts";
+import { IPayments } from "./BudgetPaymentInterfaces.ts";
 
 export interface BudgetPaymentContextValue {
     getPayments: () => Promise<string>;
-    payments?: IPayment[];
+    payments?: IPayments[];
+    setFiltersPayments: Dispatch<SetStateAction<any>>;
+    filteredPayments: () => void;
 }
 
 export const BudgetPaymentContext = createContext<BudgetPaymentContextValue>({
     getPayments: () => Promise.resolve(''),
-    payments: undefined
+    payments: undefined,
+    setFiltersPayments: () => {},
+    filteredPayments: () => Promise.resolve(''),
 });
 
 export interface BudgetPaymentContextProvider {children: ReactNode | ReactNode[];}
 
 export const BudgetPaymentContextProvider: FC<BudgetPaymentContextProvider> = ({ children }) => {
     const [total, setTotal] = useState<any>(0);
-    const {getPayments, payments} = useGetPayments();
+    const {getPayments, payments, setFiltersPayments, filteredPayments} = useGetPayments();
 
     useEffect(() => {
         !payments && getPayments()
@@ -25,7 +39,9 @@ export const BudgetPaymentContextProvider: FC<BudgetPaymentContextProvider> = ({
 
 const value = useMemo(() => ({
     getPayments,
-    payments
+    payments,
+    setFiltersPayments,
+    filteredPayments
 }), [getPayments]);
 
 return (

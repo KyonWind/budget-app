@@ -1,18 +1,18 @@
-import { KyonThemeContextProvider } from "@context/KyonThemeContext.tsx";
-import { KyonMasterTheme } from "@theme/KyonMasterTheme.tsx";
-import { KyonRouterContextProvider } from "@context/KyonRouterContext.tsx";
+import { KyonRouterContextProvider } from "@context/KyonRouterContext";
+import React from "react";
+import { KyonThemeContextProvider } from "@context/KyonThemeContext";
+import { KyonMasterTheme } from "@theme/KyonMasterTheme";
 import { BudgetFirebaseProvider } from "@context/BudgetFireBaseContext";
 import { BudgetProfileContextProvider } from "@context/BudgetProfileContext";
 import { BudgetApiDolarContextProvider } from "@context/BudgetApiDollarContext";
-import { BudgetPaymentContextProvider } from "@context/BudgetPaymentContext";
-import { KyonRouter } from "./src/router/KyonRouter.tsx";
+import { BudgetPaymentContextProvider } from "@context/BudgetPaymentContext/BudgetPaymentContext";
+import { KyonRouter } from "./src/router/KyonRouter";
 
 
 export interface IAppLinks {
   name: string;
   url: string;
 }
-
 function App(): React.JSX.Element {
   return (
     <KyonThemeContextProvider theme={KyonMasterTheme}>

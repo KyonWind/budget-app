@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
 import { Pressable } from "react-native";
+import React from "react";
 
 
 export const FooterMenu = () => {

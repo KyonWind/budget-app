@@ -26,3 +26,14 @@ export const profileInitialState = {
     user: ''
 
 }
+
+export const filterInitialState = {
+  type: '',
+  description: '',
+  cost: '',
+  url: '',
+  paymentMethod: '',
+  category: '',
+  installments: 1,
+  date: DateFormat.formatDate(new Date)
+};

@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
-import { IGasto } from "@pages/Home.tsx";
 import { IAppLinks } from "../../App.tsx";
 import { useBudgetApiDolarContext } from "@context/BudgetApiDollarContext";
 import { useNavigation } from "@react-navigation/native";
@@ -9,11 +8,12 @@ import { FireBaseService } from "@service/firebaseService";
 import { Linking, ScrollView, Switch, View } from "react-native";
 import { KyonMasterButton, KyonMasterInput, KyonMasterModal, KyonMasterText, KyonMasterView } from "@kyon/components";
 import { DateFormat } from "../utils/dateformat.ts";
+import {IPayments} from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
 
 
 interface IFormPago {
   setData: Dispatch<SetStateAction<any>>;
-  data: IGasto;
+  data: IPayments;
 }
 
 
@@ -142,9 +142,9 @@ export const FormPago = ({setData, data}: IFormPago) => {
 
   },[newPayment])
 
-  const prepareInstallment = (installmentCuantity) => {
-    console.log('%cFormPago:prepareInstallment','color:yellow',installmentCuantity);
-    return installmentCuantity
+  const prepareInstallment = (installmentQuantity: number) => {
+    console.log('%cFormPago:prepareInstallment','color:yellow',installmentQuantity);
+    return installmentQuantity
   }
 
   console.log('%cFormPago:installments','color:yellow',installments);
@@ -162,7 +162,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         inputMode={'decimal'}
         value={data.cost}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             cost: value,
           }))
@@ -175,13 +175,13 @@ export const FormPago = ({setData, data}: IFormPago) => {
         value={data.category}
         placeholder={'categoria'}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             category: value,
           }))
         }
         options={categories?.map((category: string, index: number) => {
-          return <KyonMasterButton key={index} title={category} onPress={()=> setData((prev: IGasto) => ({
+          return <KyonMasterButton key={index} title={category} onPress={()=> setData((prev: IPayments) => ({
             ...prev,
             category: category,
           }))} />;
@@ -193,7 +193,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         value={data.description}
         placeholder={'descripcion'}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             description: value,
           }))
@@ -205,7 +205,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
         value={data.date}
         placeholder={'Fecha'}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             date: value,
           }))
@@ -222,7 +222,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
                 title={app.description}
                 onPress={() => {
                   console.log('%cFormPago:press','color:yellow');
-                  setData((prev: IGasto) => ({
+                  setData((prev: IPayments) => ({
                     ...prev,
                     installments: prepareInstallment(app.id)
                   }));
@@ -232,7 +232,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
               </View>
         })}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             installments: value,
           }))
@@ -244,14 +244,14 @@ export const FormPago = ({setData, data}: IFormPago) => {
         value={data.type}
         placeholder={'Visa, Efectivo , etc'}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             type: value,
           }))
 
         }
         options={paymentTypes.map((type: {name: string}, index) => {
-          return <KyonMasterButton key={index} title={type.name} onPress={()=> setData((prev: IGasto) => ({
+          return <KyonMasterButton key={index} title={type.name} onPress={()=> setData((prev: IPayments) => ({
             ...prev,
             type: type.name,
           }))} />;
@@ -272,7 +272,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
               <KyonMasterButton
                 title={app.name}
                 onPress={() =>
-                  setData((prev: IGasto) => ({
+                  setData((prev: IPayments) => ({
                     ...prev,
                     url: app.url || app.name,
                     paymentMethod: app.name,
@@ -283,7 +283,7 @@ export const FormPago = ({setData, data}: IFormPago) => {
           );
         })}
         onChangeText={value =>
-          setData((prev: IGasto) => ({
+          setData((prev: IPayments) => ({
             ...prev,
             paymentMethod: value,
           }))

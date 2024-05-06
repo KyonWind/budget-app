@@ -1,14 +1,22 @@
 import { useBudgetProfileContext } from "@context/BudgetProfileContext";
-import { useState } from "react";
-import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {IFiltersPayments, IPayments} from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
 import { FireBaseService } from "@service/firebaseService";
-import { IGasto } from "@pages/Home.tsx";
 import { DateFormat } from "../../../utils/dateformat.ts";
+import {filterInitialState} from "@const/initialStates.ts";
 
 
 export const useGetPayments = () => {
   const { profile } = useBudgetProfileContext();
-  const [payments, setPayments] = useState<IPayment[]>()
+  const [payments, setPayments] = useState<IPayments[]>();
+  const [filtersPayments, setFiltersPayments] = useState<IFiltersPayments>(filterInitialState);
+
+  const filteredPayments = useCallback(async () => {
+    const newPayments: any[] = await FireBaseService.get('gastos');
+    console.log('%newPayments:','color:yellow',newPayments);
+    setPayments(newPayments?.filter((payment: any) =>
+      !filtersPayments?.description || payment?.description?.toLowerCase().includes(filtersPayments?.description.toLowerCase())))
+  },[payments,filtersPayments])
 
   const getPayments = async ():Promise<string> => {
     try {
@@ -19,14 +27,17 @@ export const useGetPayments = () => {
           DateFormat.getDate(a.date).getTime() - DateFormat.getDate(b.date).getTime())
           .filter(expense => !(expense.name !== profile.name && expense.category === "Personal")).reverse())
       }
-      return 'getted';
+      // @ts-ignore
+      return expenses.sort((a: any,b: any) =>
+        DateFormat.getDate(a.date).getTime() - DateFormat.getDate(b.date).getTime())
+        .filter((expense: any) => !(expense.name !== profile.name && expense.category === "Personal")).reverse();
     } catch (e: any) {
       console.log('getPaymentTypes:',e);
       return e?.toString();
     }
   }
 
-  const sortCostByCategory = (payments: IGasto[]) => {
+ /* const sortCostByCategory = (payments: IPayments[]) => {
     const result: {[k:string]: number} = {}
     payments.forEach((obj) => {
       let key = obj.category;
@@ -44,11 +55,17 @@ export const useGetPayments = () => {
       return acc
     });
     setTotal(total.toLocaleString('de-DE', {maximumFractionDigits: 2 }));
-  }
+  } */
 
+  useEffect(() => {
+    const debounce = setTimeout(() => filteredPayments(),500)
+    return () => clearTimeout(debounce)
+  }, [filtersPayments]);
   return {
     payments,
-    getPayments
+    getPayments,
+    setFiltersPayments,
+    filteredPayments
   }
 
 }

@@ -11,9 +11,10 @@
       "@pages/*": ["pages/*"],
       "@service/*": ["services/*"],
       "@const/*": ["const/*"],
-      "@components/*": ["components/*"],
-    }
+      "@components/*": ["components/*"]
+    },
     // other options...
+    "jsx": "react"
   },
   // other options...
 }

@@ -6,25 +6,14 @@ import { useBudgetProfileContext } from "@context/BudgetProfileContext";
 import { FireBaseService } from "@service/firebaseService";
 import { KyonMasterButton, KyonMasterText, KyonMasterView } from "@kyon/components";
 import { DateFormat } from "../utils/dateformat.ts";
+import {IPayments} from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
 
 
-export interface IGasto {
-  name?: string;
-  type?: string;
-  description?: string;
-  cost: string;
-  quotationUSD?: number;
-  category?: string;
-  url: string;
-  paymentMethod?: string;
-  date?: string;
-  installments: number;
-  id?: string;
-}
+
 export const Home = () => {
 
   const navigation = useNavigation();
-  const [lastPayments, setLastPayments] = useState<IGasto[]>([]);
+  const [lastPayments, setLastPayments] = useState<IPayments[]>([]);
   const [categories, setCategories] = useState<any>();
   const [total, setTotal] = useState<any>(0);
   const scrollViewRef = useRef<ScrollView | null>(null);
@@ -55,7 +44,7 @@ export const Home = () => {
     }
   }
 
-  const sortCostByCategory = (payments: IGasto[]) => {
+  const sortCostByCategory = (payments: IPayments[]) => {
 
     const result: {[k:string]: number} = {}
       payments.forEach((obj) => {
@@ -88,7 +77,7 @@ export const Home = () => {
       <KyonMasterView variant={'container'} wrapperStyle={{height:'50%', marginBottom: 45}}>
         <KyonMasterText variant={'mainTitle'} text={'Ultimos pagos'}/>
         <ScrollView ref={scrollViewRef} onScroll={handleScroll} contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}>
-        {lastPayments && lastPayments.map((payment:IGasto, index) =>
+        {lastPayments && lastPayments.map((payment:IPayments, index) =>
           <KyonMasterView key={index} variant={"card"} alignItems={'center'}>
             <KyonMasterView flexDirection={'row'} justifyContent={'center'} wrapperStyle={{width:'100%'}}>
               <KyonMasterText variant={'cardText'}  text={`User : ${payment.name}`} wrapperStyle={{marginRight:15}}/>

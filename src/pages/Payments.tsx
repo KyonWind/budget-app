@@ -1,23 +1,24 @@
 
 import { useNavigation } from "@react-navigation/native";
-import { useBudgetPaymentContext } from "@context/BudgetPaymentContext";
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
 import { SearchFilters } from "@components/SearchFilters.tsx";
 import { Animated, Pressable } from "react-native";
 import ScrollView = Animated.ScrollView;
-import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import { IPayments } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import {useBudgetPaymentContext} from "@context/BudgetPaymentContext/BudgetPaymentContext.tsx";
+import React from "react";
 
 
 export const Payments = () => {
   const navigation = useNavigation();
-  const {payments} = useBudgetPaymentContext();
+  const {payments, setFiltersPayments} = useBudgetPaymentContext();
 
   return (
     <KyonMasterView variant={'background'}>
-      <SearchFilters />
+      <SearchFilters searchText={setFiltersPayments} />
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 300 }}>
         <KyonMasterView alignItems={'center'} justifyContent={'center'} wrapperStyle={{ width: '100%', display:'flex', flexDirection: 'row', flexWrap:'wrap'}} >
-        {payments && payments.map((payment:IPayment, index) =>
+        {payments && payments.map((payment:IPayments, index) =>
           <Pressable key={index} onPress={() => navigation.navigate('paymentDetail' as never,{...payment} as never )} style={{width:'80%', margin: 15}}>
           <KyonMasterView key={index} variant={"card"} alignItems={'center'} wrapperStyle={{width: '100%'}}>
             <KyonMasterView flexDirection={'row'} justifyContent={'center'} wrapperStyle={{width:'100%'}}>
