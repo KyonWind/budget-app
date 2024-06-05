@@ -9,6 +9,7 @@ import { Linking, ScrollView, Switch, View } from "react-native";
 import { KyonMasterButton, KyonMasterInput, KyonMasterModal, KyonMasterText, KyonMasterView } from "@kyon/components";
 import { DateFormat } from "../utils/dateformat.ts";
 import {IPayments} from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import React from "react";
 
 
 interface IFormPago {

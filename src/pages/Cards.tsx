@@ -1,4 +1,5 @@
 import { KyonMasterText, KyonMasterView } from "@kyon/components";
+import React from "react";
 
 
 export const Cards = () => {

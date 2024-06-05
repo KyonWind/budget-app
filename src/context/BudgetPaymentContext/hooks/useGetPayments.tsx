@@ -13,7 +13,6 @@ export const useGetPayments = () => {
 
   const filteredPayments = useCallback(async () => {
     const newPayments: any[] = await FireBaseService.get('gastos');
-    console.log('%newPayments:','color:yellow',newPayments);
     setPayments(newPayments?.filter((payment: any) =>
       !filtersPayments?.description || payment?.description?.toLowerCase().includes(filtersPayments?.description.toLowerCase())))
   },[payments,filtersPayments])

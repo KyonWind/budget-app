@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { profiles } from "./profiles/profiles.ts";
 import { Loading } from "../pages/Loading.tsx";
 import { FooterMenu } from "../components/FooterMenu.tsx";
+import React from "react";
 
 export const KyonRouter = () => {
 

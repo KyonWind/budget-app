@@ -193,7 +193,7 @@ export const KyonMasterInput = ({
           <TextInput
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
-          value={value}
+          value={value?.toString()}
           keyboardType={keyboardType}
           inputMode={inputMode}
           onChangeText={val => {

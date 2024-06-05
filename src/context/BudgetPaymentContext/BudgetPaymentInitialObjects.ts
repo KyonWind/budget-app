@@ -1,6 +1,6 @@
-import { IPayment } from "./BudgetPaymentInterfaces.ts";
+import { IPayments } from "./BudgetPaymentInterfaces.ts";
 
-const PaymentInitialObject: IPayment = {
+const PaymentInitialObject: IPayments = {
   name: '',
   type: '',
   description: '',
@@ -9,5 +9,6 @@ const PaymentInitialObject: IPayment = {
   category: '',
   url: '',
   paymentMethod: '',
-  date: ''
+  date: '',
+  installments: 1,
 };

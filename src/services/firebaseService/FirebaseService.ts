@@ -1,7 +1,6 @@
-import database, { FirebaseDatabaseTypes } from "@react-native-firebase/database";
-import { DataSnapshot, DatabaseReference } from "@react-native-firebase/database/lib/modular/query";
-import { IProfile, useBudgetProfileContext } from "@context/BudgetProfileContext";
-import { IPayment } from "@context/BudgetPaymentContext/BudgetPaymentInterfaces.ts";
+import database from "@react-native-firebase/database";
+import { DatabaseReference, DataSnapshot } from "@react-native-firebase/database/lib/modular/query";
+import { IProfile } from "@context/BudgetProfileContext";
 
 class FirebaseService {
   private PROFILE?: IProfile
@@ -54,7 +53,7 @@ class FirebaseService {
     return database().ref(`/${item}`).push(value);
   }
 
-   async put(item: string, id: string, value: {}): void {
+   async put(item: string, id: string, value: {}): Promise<void> {
     return await database().ref(`/${item}/${id}`).update(value);
   }
 
